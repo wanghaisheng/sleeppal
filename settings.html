@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepPal Settings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0d1d31 100%);
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .status-bar {
+            height: 44px;
+            padding: 0 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-bar-time {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .status-bar-battery {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+        }
+        
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 83px;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            padding-bottom: 20px;
+        }
+        
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+        }
+        
+        .tab-item.active {
+            color: #22C55E;
+        }
+        
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .tab-label {
+            font-size: 10px;
+        }
+        
+        .settings-card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+        }
+        
+        .settings-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+        
+        .toggle {
+            position: relative;
+            width: 50px;
+            height: 28px;
+            border-radius: 14px;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .toggle.active {
+            background: linear-gradient(to right, #22C55E, #3B82F6);
+        }
+        
+        .toggle-handle {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: white;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .toggle.active .toggle-handle {
+            left: 24px;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-2"></i>
+        </div>
+        <div class="status-bar-time">9:41</div>
+        <div class="status-bar-battery">
+            <span class="mr-1">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Background -->
+    <div class="stars"></div>
+    
+    <!-- Content -->
+    <div class="h-[calc(100vh-44px)] overflow-auto pb-24">
+        <div class="p-4">
+            <div class="flex items-center mb-6">
+                <button class="mr-4">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h1 class="text-xl font-bold">设置</h1>
+            </div>
+            
+            <!-- Account Settings -->
+            <div class="mb-6">
+                <h2 class="text-lg font-bold mb-4">账号设置</h2>
+                <div class="settings-card">
+                    <div class="settings-item p-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-blue-500 p-1 mr-3">
+                                <div class="w-full h-full rounded-full bg-gray-900 flex items-center justify-center">
+                                    <i class="fas fa-user text-green-400"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="font-medium">深海共鸣者</div>
+                                <div class="text-sm text-gray-400">β-5.2Hz</div>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                    
+                    <div class="settings-item p-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gray-700/50 flex items-center justify-center mr-3">
+                                <i class="fas fa-shield-alt text-white"></i>
+                            </div>
+                            <div class="font-medium">隐私设置</div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                    
+                    <div class="settings-item p-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gray-700/50 flex items-center justify-center mr-3">
+                                <i class="fas fa-bell text-white"></i>
+                            </div>
+                            <div class="font-medium">通知设置</div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- App Settings -->
+            <div class="mb-6">
+                <h2 class="text-lg font-bold mb-4">应用设置</h2>
+                <div class="settings-card">
+                    <div class="settings-item p-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gray-700/50 flex items-center justify-center mr-3">
+                                <i class="fas fa-moon text-white"></i>
+                            </div>
+                            <div class="font-medium">睡眠设置</div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                    
+                    <div class="settings-item p-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gray-700/50 flex items-center justify-center mr-3">
+                                <i class="fas fa-cog text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium">频率模糊化</div>
+                                <div class="text-sm text-gray-400">偏移真实数据保护隐私</div>
+                            </div>
+                        </div>
+                        <div class="toggle active">
+                            <div class="toggle-handle"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-item p-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gray-700/50 flex items-center justify-center mr-3">
+                                <i class="fas fa-ring text-white"></i>
+                            </div>
+                            <div class="font-medium">智能戒指设置</div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                    
+                    <div class="settings-item p-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gray-700/50 flex items-center justify-center mr-3">
+                                <i class="fas fa-language text-white"></i>
+                            </div>
+                            <div class="font-medium">语言</div>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="mr-2 text-gray-400">中文</span>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Subscription -->
+            <div class="mb-6">
+                <h2 class="text-lg font-bold mb-4">订阅</h2>
+                <div class="settings-card">
+                    <div class="settings-item p-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center mr-3">
+                                <i class="fas fa-crown text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium">银河漫游者</div>
+                                <div class="text-sm text-gray-400">有效期至 2024-12-31</div>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                    
+                    <div class="settings-item p-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gray-700/50 flex items-center justify-center mr-3">
+                                <i class="fas fa-credit-card text-white"></i>
+                            </div>
+                            <div class="font-medium">支付方式</div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- About -->
+            <div class="mb-6">
+                <h2 class="text-lg font-bold mb-4">关于</h2>
+                <div class="settings-card">
+                    <div class="settings-item p-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gray-700/50 flex items-center justify-center mr-3">
+                                <i class="fas fa-info-circle text-white"></i>
+                            </div>
+                            <div class="font-medium">关于SleepPal</div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                    
+                    <div class="settings-item p-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gray-700/50 flex items-center justify-center mr-3">
+                                <i class="fas fa-file-alt text-white"></i>
+                            </div>
+                            <div class="font-medium">用户协议</div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                    
+                    <div class="settings-item p-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gray-700/50 flex items-center justify-center mr-3">
+                                <i class="fas fa-shield-alt text-white"></i>
+                            </div>
+                            <div class="font-medium">隐私政策</div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Logout -->
+            <div class="settings-card mb-8">
+                <div class="p-4 flex justify-center">
+                    <button class="text-red-400 font-medium">退出登录</button>
+                </div>
+            </div>
+            
+            <div class="text-center text-gray-400 text-sm mb-8">
+                <p>版本 1.2.3</p>
+                <p> 2023 SleepPal. 保留所有权利.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Tab Bar -->
+    <div class="tab-bar">
+        <div class="tab-item" data-page="home.html">
+            <div class="tab-icon"><i class="fas fa-globe"></i></div>
+            <div class="tab-label">共振星环</div>
+        </div>
+        <div class="tab-item" data-page="home.html">
+            <div class="tab-icon"><i class="fas fa-bed"></i></div>
+            <div class="tab-label">共生舱</div>
+        </div>
+        <div class="tab-item" data-page="home.html">
+            <div class="tab-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="tab-label">晨间星图</div>
+        </div>
+        <div class="tab-item active" data-page="settings.html">
+            <div class="tab-icon"><i class="fas fa-user"></i></div>
+            <div class="tab-label">我的</div>
+        </div>
+    </div>
+    
+    <script>
+        // Toggle switch functionality
+        document.querySelectorAll('.toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+        
+        // Add tab navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabItems = document.querySelectorAll('.tab-item');
+            tabItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const page = this.getAttribute('data-page');
+                    if (page) {
+                        window.location.href = page;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

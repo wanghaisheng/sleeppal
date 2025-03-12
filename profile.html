@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepPal Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0d1d31 100%);
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .status-bar {
+            height: 44px;
+            padding: 0 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-bar-time {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .status-bar-battery {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+        }
+        
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 83px;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            padding-bottom: 20px;
+        }
+        
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+        }
+        
+        .tab-item.active {
+            color: #22C55E;
+        }
+        
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .tab-label {
+            font-size: 10px;
+        }
+        
+        .profile-header {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 50%, rgba(0,0,0,0.8) 100%);
+            z-index: 0;
+        }
+        
+        .soul-crystal {
+            transform-style: preserve-3d;
+            animation: rotate 20s infinite linear;
+        }
+        
+        @keyframes rotate {
+            0% {
+                transform: rotateY(0deg) rotateX(10deg);
+            }
+            100% {
+                transform: rotateY(360deg) rotateX(10deg);
+            }
+        }
+        
+        .section-card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            transition: all 0.3s;
+        }
+        
+        .section-card:active {
+            transform: scale(0.98);
+        }
+        
+        .badge {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .badge::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, rgba(34, 197, 94, 0.5), transparent 30%);
+            animation: rotate 4s linear infinite;
+        }
+        
+        .badge::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: rgba(17, 24, 39, 0.9);
+            border-radius: 7px;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-2"></i>
+        </div>
+        <div class="status-bar-time">9:41</div>
+        <div class="status-bar-battery">
+            <span class="mr-1">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Background -->
+    <div class="stars"></div>
+    
+    <!-- Content -->
+    <div class="h-[calc(100vh-44px)] overflow-auto pb-24">
+        <!-- Profile Header -->
+        <div class="profile-header h-56 relative">
+            <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1000" alt="Profile Background" class="w-full h-full object-cover">
+            <div class="absolute bottom-0 left-0 w-full p-4 z-10">
+                <div class="flex items-end">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-br from-green-400 to-blue-500 p-1">
+                        <div class="w-full h-full rounded-full bg-gray-900 flex items-center justify-center">
+                            <i class="fas fa-user text-green-400 text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <h1 class="text-xl font-bold">深海共鸣者</h1>
+                        <p class="text-sm text-gray-300">β-5.2Hz</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Soul Crystal -->
+        <div class="px-4 -mt-10 mb-6">
+            <div class="section-card p-4">
+                <h2 class="text-lg font-bold mb-4">灵魂晶体</h2>
+                <div class="flex justify-center">
+                    <div class="soul-crystal w-32 h-32 relative">
+                        <div class="absolute inset-0" style="transform: translateZ(16px); background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(59, 130, 246, 0.2)); clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);"></div>
+                        <div class="absolute inset-0" style="transform: translateZ(-16px) rotateY(180deg); background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(59, 130, 246, 0.2)); clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);"></div>
+                        <div class="absolute inset-0" style="transform: translateX(16px) rotateY(90deg); background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(59, 130, 246, 0.2)); clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);"></div>
+                        <div class="absolute inset-0" style="transform: translateX(-16px) rotateY(-90deg); background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(59, 130, 246, 0.2)); clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);"></div>
+                        <div class="absolute inset-0" style="transform: translateY(16px) rotateX(-90deg); background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(59, 130, 246, 0.2)); clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);"></div>
+                        <div class="absolute inset-0" style="transform: translateY(-16px) rotateX(90deg); background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(59, 130, 246, 0.2)); clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);"></div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="grid grid-cols-3 gap-2 text-center">
+                        <div class="badge text-xs p-2 rounded-lg">深海偏好</div>
+                        <div class="badge text-xs p-2 rounded-lg">量子思维</div>
+                        <div class="badge text-xs p-2 rounded-lg">电子雨声</div>
+                        <div class="badge text-xs p-2 rounded-lg">共鸣者</div>
+                        <div class="badge text-xs p-2 rounded-lg">护航星</div>
+                        <div class="badge text-xs p-2 rounded-lg">夜行动物</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats -->
+        <div class="px-4 mb-6">
+            <div class="grid grid-cols-2 gap-4">
+                <div class="section-card p-4">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-green-400">76</div>
+                        <div class="text-sm text-gray-400">累计共振次数</div>
+                    </div>
+                </div>
+                <div class="section-card p-4">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-blue-400">89%</div>
+                        <div class="text-sm text-gray-400">平均匹配度</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sleep Archive -->
+        <div class="px-4 mb-6">
+            <div class="section-card p-4">
+                <h2 class="text-lg font-bold mb-4">睡眠档案</h2>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+                                <i class="fas fa-moon text-green-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium">平均睡眠时长</div>
+                                <div class="text-sm text-gray-400">最近30天</div>
+                            </div>
+                        </div>
+                        <div class="text-xl font-bold text-green-400">7.2h</div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+                                <i class="fas fa-heart text-blue-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium">平均心率</div>
+                                <div class="text-sm text-gray-400">睡眠期间</div>
+                            </div>
+                        </div>
+                        <div class="text-xl font-bold text-blue-400">62</div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mr-3">
+                                <i class="fas fa-clock text-purple-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium">平均入睡时间</div>
+                                <div class="text-sm text-gray-400">最近30天</div>
+                            </div>
+                        </div>
+                        <div class="text-xl font-bold text-purple-400">18min</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Badges -->
+        <div class="px-4 mb-6">
+            <h2 class="text-lg font-bold mb-4">我的徽章</h2>
+            <div class="grid grid-cols-4 gap-4">
+                <div class="flex flex-col items-center">
+                    <div class="w-14 h-14 rounded-full bg-gradient-to-br from-green-400/30 to-blue-500/30 flex items-center justify-center mb-1">
+                        <i class="fas fa-star text-green-400"></i>
+                    </div>
+                    <span class="text-xs text-center">初生双星</span>
+                </div>
+                
+                <div class="flex flex-col items-center">
+                    <div class="w-14 h-14 rounded-full bg-gradient-to-br from-purple-400/30 to-pink-500/30 flex items-center justify-center mb-1">
+                        <i class="fas fa-dna text-purple-400"></i>
+                    </div>
+                    <span class="text-xs text-center">共生体</span>
+                </div>
+                
+                <div class="flex flex-col items-center">
+                    <div class="w-14 h-14 rounded-full bg-gradient-to-br from-yellow-400/30 to-orange-500/30 flex items-center justify-center mb-1">
+                        <i class="fas fa-moon text-yellow-400"></i>
+                    </div>
+                    <span class="text-xs text-center">睡眠守护</span>
+                </div>
+                
+                <div class="flex flex-col items-center">
+                    <div class="w-14 h-14 rounded-full bg-gradient-to-br from-gray-400/30 to-gray-500/30 flex items-center justify-center mb-1">
+                        <i class="fas fa-plus text-gray-400"></i>
+                    </div>
+                    <span class="text-xs text-center">更多</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Settings -->
+        <div class="px-4 mb-6">
+            <div class="section-card p-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-gray-700/50 flex items-center justify-center mr-3">
+                            <i class="fas fa-cog text-white"></i>
+                        </div>
+                        <div class="font-medium">设置</div>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Tab Bar -->
+    <div class="tab-bar">
+        <div class="tab-item" data-page="home.html">
+            <div class="tab-icon"><i class="fas fa-globe"></i></div>
+            <div class="tab-label">共振星环</div>
+        </div>
+        <div class="tab-item" data-page="home.html">
+            <div class="tab-icon"><i class="fas fa-bed"></i></div>
+            <div class="tab-label">共生舱</div>
+        </div>
+        <div class="tab-item" data-page="home.html">
+            <div class="tab-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="tab-label">晨间星图</div>
+        </div>
+        <div class="tab-item active" data-page="profile.html">
+            <div class="tab-icon"><i class="fas fa-user"></i></div>
+            <div class="tab-label">我的</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabItems = document.querySelectorAll('.tab-item');
+            tabItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const page = this.getAttribute('data-page');
+                    if (page) {
+                        window.location.href = page;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

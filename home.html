@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepPal Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0d1d31 100%);
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .status-bar {
+            height: 44px;
+            padding: 0 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-bar-time {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .status-bar-battery {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+        }
+        
+        .ring-pulse {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 2px solid rgba(34, 197, 94, 0.2);
+            transform: translate(-50%, -50%);
+            animation: pulse 3s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.4;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.8;
+            }
+        }
+        
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 83px;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            padding-bottom: 20px;
+        }
+        
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+        }
+        
+        .tab-item.active {
+            color: #22C55E;
+        }
+        
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .tab-label {
+            font-size: 10px;
+        }
+        
+        .user-card {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .user-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 16px;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            z-index: -1;
+        }
+        
+        .user-card:active {
+            transform: scale(0.98);
+        }
+        
+        .floating-button {
+            position: absolute;
+            bottom: 100px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #22C55E, #3B82F6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.5);
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-2"></i>
+        </div>
+        <div class="status-bar-time">9:41</div>
+        <div class="status-bar-battery">
+            <span class="mr-1">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Background -->
+    <div class="stars"></div>
+    
+    <!-- Content -->
+    <div class="px-4 pt-4 pb-24 h-[calc(100vh-44px)] overflow-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold">共振星环</h1>
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+                <i class="fas fa-user text-white"></i>
+            </div>
+        </div>
+        
+        <!-- Main Circle -->
+        <div class="relative w-full aspect-square max-w-md mx-auto mb-8">
+            <div class="absolute top-1/2 left-1/2 w-3/4 h-3/4 bg-gradient-to-br from-green-400/20 to-blue-500/20 rounded-full"></div>
+            <div class="ring-pulse" style="left: 50%; top: 50%;"></div>
+            <div class="ring-pulse" style="left: 50%; top: 50%; animation-delay: 1s;"></div>
+            <div class="ring-pulse" style="left: 50%; top: 50%; animation-delay: 2s;"></div>
+            
+            <!-- Planets -->
+            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center cursor-pointer shadow-lg shadow-orange-500/30">
+                <span class="text-xs font-bold">闪电匹配</span>
+            </div>
+            
+            <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center cursor-pointer shadow-lg shadow-purple-500/30">
+                <span class="text-xs font-bold">老友模式</span>
+            </div>
+            
+            <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-16 h-16 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center cursor-pointer shadow-lg shadow-emerald-500/30">
+                <span class="text-xs font-bold">共振匹配</span>
+            </div>
+            
+            <div class="absolute right-0 top-1/2 transform -translate-y-1/2 w-16 h-16 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center cursor-pointer shadow-lg shadow-rose-500/30">
+                <span class="text-xs font-bold">AI伴睡</span>
+            </div>
+            
+            <!-- Center Ring -->
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full border-2 border-green-400/50 flex items-center justify-center">
+                <div class="w-20 h-20 rounded-full bg-gradient-to-br from-green-500/30 to-blue-500/30 backdrop-blur-sm flex items-center justify-center">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+                        <i class="fas fa-bed text-white text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="text-xl font-bold mb-4">共振历史</h2>
+        
+        <!-- History Cards -->
+        <div class="space-y-4 mb-8">
+            <div class="user-card bg-gray-900/60 backdrop-blur-md rounded-xl p-4">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mr-4">
+                        <i class="fas fa-user text-blue-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">深海共鸣者</h3>
+                        <p class="text-xs text-gray-400">昨天 23:45 · 共鸣时长: 47分钟</p>
+                    </div>
+                    <div class="ml-auto text-right">
+                        <div class="text-green-400">98%</div>
+                        <div class="text-xs text-gray-400">匹配度</div>
+                    </div>
+                </div>
+                <div class="mt-3 text-sm text-gray-300">
+                    "心率同步率达到90%以上，产生微型极光共振"
+                </div>
+            </div>
+            
+            <div class="user-card bg-gray-900/60 backdrop-blur-md rounded-xl p-4">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mr-4">
+                        <i class="fas fa-robot text-purple-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">机械鲸鱼</h3>
+                        <p class="text-xs text-gray-400">1月8日 · 共鸣时长: 62分钟</p>
+                    </div>
+                    <div class="ml-auto text-right">
+                        <div class="text-green-400">AI</div>
+                        <div class="text-xs text-gray-400">守护精灵</div>
+                    </div>
+                </div>
+                <div class="mt-3 text-sm text-gray-300">
+                    "深海环境音效助你沉入梦乡，声景收藏+1"
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="text-xl font-bold mb-4">推荐共鸣者</h2>
+        
+        <!-- Recommendations -->
+        <div class="grid grid-cols-2 gap-4">
+            <div class="user-card bg-gray-900/60 backdrop-blur-md rounded-xl p-4">
+                <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mb-2">
+                    <i class="fas fa-user text-green-400"></i>
+                </div>
+                <h3 class="font-semibold">星际旅人</h3>
+                <p class="text-xs text-gray-400">匹配度预测: 87%</p>
+            </div>
+            
+            <div class="user-card bg-gray-900/60 backdrop-blur-md rounded-xl p-4">
+                <div class="w-12 h-12 rounded-full bg-pink-500/20 flex items-center justify-center mb-2">
+                    <i class="fas fa-user text-pink-400"></i>
+                </div>
+                <h3 class="font-semibold">量子浪漫派</h3>
+                <p class="text-xs text-gray-400">匹配度预测: 82%</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Floating Action Button -->
+    <div class="floating-button pulse-animation">
+        <i class="fas fa-plus text-white text-xl"></i>
+    </div>
+    
+    <!-- Bottom Tab Bar -->
+    <div class="tab-bar">
+        <div class="tab-item active" data-page="home.html">
+            <div class="tab-icon"><i class="fas fa-globe"></i></div>
+            <div class="tab-label">共振星环</div>
+        </div>
+        <div class="tab-item" data-page="home.html">
+            <div class="tab-icon"><i class="fas fa-bed"></i></div>
+            <div class="tab-label">共生舱</div>
+        </div>
+        <div class="tab-item" data-page="home.html">
+            <div class="tab-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="tab-label">晨间星图</div>
+        </div>
+        <div class="tab-item" data-page="profile.html">
+            <div class="tab-icon"><i class="fas fa-user"></i></div>
+            <div class="tab-label">我的</div>
+        </div>
+    </div>
+    
+    <script>
+        // Add tab navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabItems = document.querySelectorAll('.tab-item');
+            tabItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const page = this.getAttribute('data-page');
+                    if (page) {
+                        window.location.href = page;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

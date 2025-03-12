@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepPal Paywall</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0d1d31 100%);
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .status-bar {
+            height: 44px;
+            padding: 0 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-bar-time {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .status-bar-battery {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+        }
+        
+        .pricing-card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .pricing-card.selected {
+            border-color: #22C55E;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #22C55E, #3B82F6);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+        
+        .subscribe-btn {
+            background: linear-gradient(135deg, #22C55E, #3B82F6);
+            color: white;
+            font-weight: 600;
+            padding: 16px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .subscribe-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+        }
+        
+        .later-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 500;
+            padding: 16px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .testimonial-card {
+            background: rgba(17, 24, 39, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 12px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        
+        .floating {
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.3);
+            }
+            
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+            }
+            
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-2"></i>
+        </div>
+        <div class="status-bar-time">9:41</div>
+        <div class="status-bar-battery">
+            <span class="mr-1">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Background -->
+    <div class="stars"></div>
+    
+    <!-- Content -->
+    <div class="h-[calc(100vh-44px)] overflow-auto pb-6">
+        <div class="p-4">
+            <div class="mb-8 text-center">
+                <div class="w-20 h-20 mx-auto mb-4 relative floating">
+                    <div class="absolute inset-0 rounded-full bg-gradient-to-br from-green-400/30 to-blue-500/30 animate-pulse"></div>
+                    <div class="relative flex items-center justify-center w-full h-full">
+                        <i class="fas fa-rocket text-4xl text-green-400"></i>
+                    </div>
+                </div>
+                <h1 class="text-2xl font-bold mb-2">解锁完整体验</h1>
+                <p class="text-gray-300 text-sm">升级到SleepPal高级会员，开启深度共鸣之旅</p>
+            </div>
+            
+            <!-- Pricing Cards -->
+            <div class="space-y-4 mb-8">
+                <div class="pricing-card p-4">
+                    <div class="flex items-center">
+                        <div class="w-6 h-6 rounded-full border-2 border-gray-400 mr-3 flex-shrink-0"></div>
+                        <div class="flex-grow">
+                            <div class="font-medium">月付</div>
+                            <div class="text-sm text-gray-400">¥39/月</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold">¥39</div>
+                            <div class="text-xs text-gray-400">每月支付</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pricing-card p-4 selected">
+                    <div class="popular-badge">最受欢迎</div>
+                    <div class="flex items-center">
+                        <div class="w-6 h-6 rounded-full border-2 border-green-400 bg-green-400/20 mr-3 flex-shrink-0 flex items-center justify-center">
+                            <i class="fas fa-check text-xs text-green-400"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <div class="font-medium">年付</div>
+                            <div class="text-sm text-gray-400">相当于¥24/月</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold">¥288</div>
+                            <div class="text-xs text-green-400">节省42%</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pricing-card p-4">
+                    <div class="flex items-center">
+                        <div class="w-6 h-6 rounded-full border-2 border-gray-400 mr-3 flex-shrink-0"></div>
+                        <div class="flex-grow">
+                            <div class="font-medium">终身会员</div>
+                            <div class="text-sm text-gray-400">一次付清，永久使用</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold">¥888</div>
+                            <div class="text-xs text-gray-400">一次性支付</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Features -->
+            <div class="mb-8">
+                <h2 class="text-lg font-bold mb-4">高级会员专享</h2>
+                <div class="space-y-4">
+                    <div class="feature-item">
+                        <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-check text-green-400 text-xs"></i>
+                        </div>
+                        <div>
+                            <div class="font-medium">无限闪电匹配</div>
+                            <div class="text-sm text-gray-400">随时匹配最佳共鸣伴侣</div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-check text-green-400 text-xs"></i>
+                        </div>
+                        <div>
+                            <div class="font-medium">全部AI伴睡精灵</div>
+                            <div class="text-sm text-gray-400">解锁所有虚拟守护精灵</div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-check text-green-400 text-xs"></i>
+                        </div>
+                        <div>
+                            <div class="font-medium">高级睡眠报告</div>
+                            <div class="text-sm text-gray-400">详细分析身体与灵魂数据</div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-check text-green-400 text-xs"></i>
+                        </div>
+                        <div>
+                            <div class="font-medium">灵魂频率探测</div>
+                            <div class="text-sm text-gray-400">打造专属灵魂晶体</div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-check text-green-400 text-xs"></i>
+                        </div>
+                        <div>
+                            <div class="font-medium">每日声波明信片</div>
+                            <div class="text-sm text-gray-400">发送和收藏声波记忆</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonial -->
+            <div class="testimonial-card p-4 mb-8">
+                <div class="flex items-center mb-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400/30 to-blue-500/30 flex items-center justify-center mr-3">
+                        <span class="text-green-400 text-xs">ZW</span>
+                    </div>
+                    <div>
+                        <div class="font-medium">张无忧</div>
+                        <div class="text-xs text-gray-400">高级会员 · 6个月</div>
+                    </div>
+                    <div class="ml-auto">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-300">
+                    "订阅会员后我的睡眠质量提升了40%！无限匹配功能让我找到了完美的伴睡搭档，现在每晚入睡都像一场灵魂旅行。"
+                </p>
+            </div>
+            
+            <!-- Subscribe Button -->
+            <div class="space-y-4 mb-6">
+                <button class="subscribe-btn w-full pulse">
+                    立即开启高级会员
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+                
+                <button class="later-btn w-full" onclick="parent.postMessage({type: 'demoAction', action: 'next'}, '*')">
+                    稍后再说
+                </button>
+            </div>
+            
+            <!-- Terms -->
+            <div class="text-center text-xs text-gray-400 mb-6">
+                <p>订阅会自动续费，可随时取消</p>
+                <p class="mt-2">点击上方按钮，表示您同意我们的<a href="#" class="text-green-400">服务条款</a>和<a href="#" class="text-green-400">隐私政策</a></p>
+            </div>
+            
+            <!-- Secure Payment -->
+            <div class="flex justify-center items-center text-xs text-gray-400">
+                <i class="fas fa-lock mr-2"></i>
+                <span>安全支付 由Apple提供保障</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Pricing card selection
+        document.querySelectorAll('.pricing-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove selection from all cards
+                document.querySelectorAll('.pricing-card').forEach(c => {
+                    c.classList.remove('selected');
+                    const radio = c.querySelector('.w-6.h-6.rounded-full');
+                    radio.classList.remove('bg-green-400/20');
+                    radio.classList.remove('border-green-400');
+                    radio.classList.add('border-gray-400');
+                    
+                    // Remove check icon if exists
+                    const checkIcon = radio.querySelector('i');
+                    if (checkIcon) {
+                        radio.innerHTML = '';
+                    }
+                });
+                
+                // Select this card
+                this.classList.add('selected');
+                const radio = this.querySelector('.w-6.h-6.rounded-full');
+                radio.classList.add('bg-green-400/20');
+                radio.classList.add('border-green-400');
+                radio.classList.remove('border-gray-400');
+                
+                // Add check icon
+                radio.innerHTML = '<i class="fas fa-check text-xs text-green-400"></i>';
+            });
+        });
+    </script>
+</body>
+</html>
