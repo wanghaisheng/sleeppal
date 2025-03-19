@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepPal Flash Match</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0d1d31 100%);
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .status-bar {
+            height: 44px;
+            padding: 0 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-bar-time {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .status-bar-battery {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+        }
+
+        .pulse-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(34, 197, 94, 0.05);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.4;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.8;
+            }
+        }
+        
+        .preference-item {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .preference-item:hover {
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+        
+        .option-pill {
+            display: inline-block;
+            padding: 6px 12px;
+            margin: 4px;
+            border-radius: 20px;
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .option-pill.selected {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: rgba(34, 197, 94, 0.5);
+            color: #22C55E;
+        }
+        
+        .match-button {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFB938, #FF5630);
+            box-shadow: 0 0 30px rgba(255, 173, 56, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: pulse-orange 2s infinite;
+        }
+        
+        .match-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(255, 173, 56, 0.6);
+        }
+        
+        .match-button:active {
+            transform: scale(0.95);
+        }
+        
+        @keyframes pulse-orange {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 173, 56, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 20px rgba(255, 173, 56, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 173, 56, 0);
+            }
+        }
+        
+        .shimmer {
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+        
+        .meteor {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            opacity: 0;
+            animation: meteor-fall 1.5s linear forwards;
+        }
+        
+        @keyframes meteor-fall {
+            0% {
+                transform: translateY(-100vh) translateX(0) rotate(45deg) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(-80vh) translateX(20vw) rotate(45deg) scale(1);
+            }
+            100% {
+                transform: translateY(100vh) translateX(100vw) rotate(45deg) scale(1);
+                opacity: 0;
+            }
+        }
+        
+        .range-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            border-radius: 2px;
+        }
+        
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #FFB938;
+            cursor: pointer;
+        }
+        
+        .dropdown-select {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            width: 100%;
+            outline: none;
+        }
+        
+        .dropdown-select option {
+            background: #1F2937;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-2"></i>
+        </div>
+        <div class="status-bar-time">9:41</div>
+        <div class="status-bar-battery">
+            <span class="mr-1">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Background -->
+    <div class="stars"></div>
+    
+    <!-- Content -->
+    <div class="px-4 pt-4 pb-24 h-[calc(100vh-44px)] overflow-auto">
+        <div class="flex items-center mb-6">
+            <button class="mr-4" onclick="window.location.href='home.html'">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <h1 class="text-2xl font-bold">闪电匹配</h1>
+        </div>
+        
+        <div class="mb-8 text-center">
+            <div class="relative w-full flex justify-center mb-10">
+                <div class="match-button" id="start-button">
+                    <i class="fas fa-bolt text-white text-5xl"></i>
+                </div>
+            </div>
+            <p class="text-gray-300 mb-6">点击闪电球，立即为你匹配最合适的伴睡者</p>
+            
+            <div id="subscription-needed" class="hidden bg-gray-900/40 backdrop-filter backdrop-blur-lg rounded-xl p-4 mb-6 text-left">
+                <div class="flex items-center mb-3">
+                    <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center mr-3">
+                        <i class="fas fa-exclamation-triangle text-yellow-500"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">匹配次数已用完</h3>
+                        <p class="text-xs text-gray-400">今日免费匹配次数已用完</p>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-300 mb-3">
+                    订阅银河漫游者计划可获得无限匹配次数
+                </p>
+                <div class="flex space-x-2">
+                    <button class="flex-1 py-2 px-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full text-white text-sm font-medium">
+                        立即订阅
+                    </button>
+                    <button class="flex-1 py-2 px-4 bg-gray-800/80 border border-gray-700 rounded-full text-white text-sm">
+                        单次购买 ¥6
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Preferences Section -->
+        <h2 class="text-lg font-bold mb-4">偏好设置</h2>
+        
+        <!-- Communication Preference -->
+        <div class="preference-item mb-4">
+            <h3 class="font-medium mb-2">交流偏好</h3>
+            <div class="flex flex-wrap">
+                <div class="option-pill selected" onclick="toggleSelection(this)">允许语音</div>
+                <div class="option-pill" onclick="toggleSelection(this)">不想说话</div>
+            </div>
+        </div>
+        
+        <!-- Theme Preference -->
+        <div class="preference-item mb-4">
+            <h3 class="font-medium mb-2">界面主题</h3>
+            <div class="flex flex-wrap">
+                <div class="option-pill selected" onclick="toggleSelection(this)">深空主题</div>
+                <div class="option-pill" onclick="toggleSelection(this)">绿色主题</div>
+                <div class="option-pill" onclick="toggleSelection(this)">蓝色主题</div>
+                <div class="option-pill" onclick="toggleSelection(this)">紫色主题</div>
+            </div>
+        </div>
+        
+        <!-- Age Range -->
+        <div class="preference-item mb-4">
+            <h3 class="font-medium mb-2">年龄范围</h3>
+            <div class="px-2">
+                <div class="flex justify-between mb-1">
+                    <span class="text-sm text-gray-400">18岁</span>
+                    <span class="text-sm text-gray-400">40岁</span>
+                </div>
+                <input type="range" min="18" max="40" value="25" class="range-slider" id="ageRange">
+                <div class="text-center mt-2 text-sm">
+                    <span id="selectedAge">25</span>岁 及以下
+                </div>
+            </div>
+        </div>
+        
+        <!-- Region Selection -->
+        <div class="preference-item mb-4">
+            <h3 class="font-medium mb-2">地区选择</h3>
+            <select class="dropdown-select">
+                <option value="any">全球</option>
+                <option value="cn">中国</option>
+                <option value="asia">亚洲</option>
+                <option value="na">北美</option>
+                <option value="eu">欧洲</option>
+                <option value="sa">南美</option>
+                <option value="oc">大洋洲</option>
+                <option value="af">非洲</option>
+            </select>
+        </div>
+        
+        <!-- Planetary Selection -->
+        <div class="preference-item mb-4">
+            <h3 class="font-medium mb-2">星球属性</h3>
+            <div class="flex flex-wrap">
+                <div class="option-pill" onclick="toggleSelection(this)">水星</div>
+                <div class="option-pill" onclick="toggleSelection(this)">金星</div>
+                <div class="option-pill selected" onclick="toggleSelection(this)">地球</div>
+                <div class="option-pill" onclick="toggleSelection(this)">火星</div>
+                <div class="option-pill" onclick="toggleSelection(this)">木星</div>
+                <div class="option-pill" onclick="toggleSelection(this)">土星</div>
+            </div>
+        </div>
+        
+        <!-- MBTI Personality -->
+        <div class="preference-item mb-4">
+            <h3 class="font-medium mb-2">MBTI人格</h3>
+            <div class="flex flex-wrap">
+                <div class="option-pill" onclick="toggleSelection(this)">INTJ</div>
+                <div class="option-pill" onclick="toggleSelection(this)">INFJ</div>
+                <div class="option-pill selected" onclick="toggleSelection(this)">INFP</div>
+                <div class="option-pill" onclick="toggleSelection(this)">INTP</div>
+                <div class="option-pill" onclick="toggleSelection(this)">ENTJ</div>
+                <div class="option-pill" onclick="toggleSelection(this)">ENFJ</div>
+                <div class="option-pill" onclick="toggleSelection(this)">ENFP</div>
+                <div class="option-pill" onclick="toggleSelection(this)">ENTP</div>
+                <div class="option-pill" onclick="toggleSelection(this)">ISTJ</div>
+                <div class="option-pill" onclick="toggleSelection(this)">ISFJ</div>
+                <div class="option-pill" onclick="toggleSelection(this)">ISFP</div>
+                <div class="option-pill" onclick="toggleSelection(this)">ISTP</div>
+                <div class="option-pill" onclick="toggleSelection(this)">ESTJ</div>
+                <div class="option-pill" onclick="toggleSelection(this)">ESFJ</div>
+                <div class="option-pill" onclick="toggleSelection(this)">ESFP</div>
+                <div class="option-pill" onclick="toggleSelection(this)">ESTP</div>
+            </div>
+        </div>
+        
+        <!-- Zodiac Sign -->
+        <div class="preference-item mb-8">
+            <h3 class="font-medium mb-2">星座选择</h3>
+            <div class="flex flex-wrap">
+                <div class="option-pill" onclick="toggleSelection(this)">白羊座</div>
+                <div class="option-pill" onclick="toggleSelection(this)">金牛座</div>
+                <div class="option-pill" onclick="toggleSelection(this)">双子座</div>
+                <div class="option-pill" onclick="toggleSelection(this)">巨蟹座</div>
+                <div class="option-pill" onclick="toggleSelection(this)">狮子座</div>
+                <div class="option-pill" onclick="toggleSelection(this)">处女座</div>
+                <div class="option-pill selected" onclick="toggleSelection(this)">天秤座</div>
+                <div class="option-pill" onclick="toggleSelection(this)">天蝎座</div>
+                <div class="option-pill" onclick="toggleSelection(this)">射手座</div>
+                <div class="option-pill" onclick="toggleSelection(this)">摩羯座</div>
+                <div class="option-pill" onclick="toggleSelection(this)">水瓶座</div>
+                <div class="option-pill" onclick="toggleSelection(this)">双鱼座</div>
+            </div>
+        </div>
+        
+        <!-- Matching Modal (Hidden by default) -->
+        <div id="matching-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex flex-col items-center justify-center px-4">
+            <div class="w-full max-w-xs text-center">
+                <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
+                    <i class="fas fa-sync-alt text-white text-2xl animate-spin"></i>
+                </div>
+                <h2 class="text-xl font-bold mb-2">正在寻找伴睡者</h2>
+                <p class="text-gray-300 mb-6">正在搜索与你心率呼吸相近的匹配对象...</p>
+                <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden mb-8">
+                    <div class="h-full shimmer bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full" style="width: 60%"></div>
+                </div>
+                <button id="cancel-button" class="px-6 py-3 border border-gray-600 rounded-full">
+                    取消
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Toggle selection for option pills
+        function toggleSelection(element) {
+            const parent = element.parentElement;
+            const pills = parent.querySelectorAll('.option-pill');
+            
+            // Check if we should allow multiple selections
+            const allowMultiple = ['MBTI人格', '星座选择', '星球属性'].includes(parent.previousElementSibling.textContent);
+            
+            if (!allowMultiple) {
+                // Remove selection from all pills in this group
+                pills.forEach(pill => pill.classList.remove('selected'));
+            }
+            
+            // Toggle current pill
+            element.classList.toggle('selected');
+        }
+        
+        // Handle age range slider
+        const ageSlider = document.getElementById('ageRange');
+        const ageDisplay = document.getElementById('selectedAge');
+        
+        ageSlider.addEventListener('input', function() {
+            ageDisplay.textContent = this.value;
+        });
+        
+        // Check if user has remaining matches
+        // For demo: 30% chance of showing "out of matches" message
+        const hasRemainingMatches = Math.random() > 0.3;
+        
+        document.getElementById('start-button').addEventListener('click', function() {
+            if (!hasRemainingMatches) {
+                // Show subscription needed message
+                document.getElementById('subscription-needed').classList.remove('hidden');
+                return;
+            }
+            
+            // Show matching modal
+            const matchingModal = document.getElementById('matching-modal');
+            matchingModal.classList.remove('hidden');
+            matchingModal.classList.add('flex');
+            
+            // Create meteor shower effect
+            createMeteorShower();
+            
+            // Redirect to the matching screen
+            setTimeout(() => {
+                window.location.href = 'match-in-progress.html';
+            }, 3000);
+        });
+
+        document.getElementById('cancel-button').addEventListener('click', function() {
+            const matchingModal = document.getElementById('matching-modal');
+            matchingModal.classList.add('hidden');
+            matchingModal.classList.remove('flex');
+        });
+
+        function createMeteorShower() {
+            const container = document.getElementById('matching-modal');
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const meteor = document.createElement('div');
+                    meteor.classList.add('meteor');
+                    meteor.style.left = `${Math.random() * 100}%`;
+                    meteor.style.width = `${Math.random() * 2 + 1}px`;
+                    meteor.style.height = `${Math.random() * 80 + 20}px`;
+                    meteor.style.boxShadow = `0 0 ${Math.random() * 5 + 5}px white`;
+                    meteor.style.animationDelay = `${Math.random() * 1}s`;
+                    container.appendChild(meteor);
+                    
+                    // Remove meteor after animation
+                    setTimeout(() => {
+                        meteor.remove();
+                    }, 1500);
+                }, i * 200);
+            }
+        }
+    </script>
+</body>
+</html>

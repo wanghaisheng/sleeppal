@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepPal Voice Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0d1d31 100%);
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .status-bar {
+            height: 44px;
+            padding: 0 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-bar-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .status-bar-time {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .status-bar-battery {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+        }
+        
+        .audio-wave {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            height: 60px;
+        }
+        
+        .audio-bar {
+            width: 4px;
+            height: 30%;
+            background: linear-gradient(to top, #22C55E, #3B82F6);
+            border-radius: 2px;
+            animation: wave 1.2s ease-in-out infinite;
+        }
+        
+        @keyframes wave {
+            0%, 100% {
+                height: 20%;
+            }
+            50% {
+                height: 70%;
+            }
+        }
+        
+        .audio-bar.muted {
+            animation: none;
+            height: 10%;
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .control-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .control-button:active {
+            transform: scale(0.95);
+        }
+        
+        .end-call-button {
+            background-color: #EF4444;
+            color: white;
+        }
+        
+        .mute-button {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .mute-button.active {
+            background-color: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #EF4444;
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(34, 197, 94, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+            }
+        }
+        
+        .slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            border-radius: 2px;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22C55E, #3B82F6);
+            cursor: pointer;
+        }
+        
+        .dna-helix {
+            position: relative;
+            height: 120px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .dna-strand {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .dna-line-1 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.5) 20%, rgba(34, 197, 94, 0.2) 50%, transparent);
+            clip-path: path('M0,60 C50,20 100,80 150,40 C200,0 250,60 300,20 C350,0 400,40 450,20 L450,120 L0,120 Z');
+            animation: wave1 10s linear infinite;
+        }
+        
+        .dna-line-2 {
+            position: absolute;
+            top: 0;
+            left: -50px;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5) 20%, rgba(59, 130, 246, 0.2) 50%, transparent);
+            clip-path: path('M0,20 C50,60 100,20 150,60 C200,100 250,40 300,80 C350,100 400,60 450,80 L450,120 L0,120 Z');
+            animation: wave2 15s linear infinite;
+        }
+        
+        @keyframes wave1 {
+            0% { transform: translateX(-50px); }
+            100% { transform: translateX(50px); }
+        }
+        
+        @keyframes wave2 {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(100px); }
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-2"></i>
+        </div>
+        <div class="status-bar-time">9:41</div>
+        <div class="status-bar-battery">
+            <span class="mr-1">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Background -->
+    <div class="stars"></div>
+    
+    <!-- Content -->
+    <div class="flex flex-col h-[calc(100vh-44px)]">
+        <!-- Top navbar -->
+        <div class="px-4 py-3 flex items-center">
+            <button onclick="window.location.href='resonance-pod.html'" class="text-white">
+                <i class="fas fa-chevron-down text-xl"></i>
+            </button>
+            <div class="ml-auto px-3 py-1 bg-green-500/20 text-green-400 text-xs rounded-full">
+                已连接 24:32
+            </div>
+        </div>
+        
+        <!-- Main content -->
+        <div class="flex-1 flex flex-col">
+            <!-- DNA Helix Animation -->
+            <div class="dna-helix mb-6 mt-4">
+                <div class="dna-strand">
+                    <div class="dna-line-1"></div>
+                    <div class="dna-line-2"></div>
+                </div>
+            </div>
+            
+            <!-- User profile -->
+            <div class="flex-1 flex flex-col items-center justify-center px-4">
+                <div class="w-24 h-24 mb-4 relative">
+                    <div class="w-full h-full rounded-full bg-blue-500/20 flex items-center justify-center pulse-animation">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=faces&auto=format&q=80" alt="深海共鸣者" class="w-full h-full rounded-full object-cover">
+                    </div>
+                </div>
+                
+                <h2 class="text-xl font-bold mb-1">深海共鸣者</h2>
+                <p class="text-sm text-gray-400 mb-6">β-5.2Hz</p>
+                
+                <!-- Audio wave visualization -->
+                <div class="audio-wave mb-8" id="partnerAudioWave">
+                    <div class="audio-bar" style="animation-delay: 0.1s"></div>
+                    <div class="audio-bar" style="animation-delay: 0.2s"></div>
+                    <div class="audio-bar" style="animation-delay: 0.3s"></div>
+                    <div class="audio-bar" style="animation-delay: 0.4s"></div>
+                    <div class="audio-bar" style="animation-delay: 0.5s"></div>
+                    <div class="audio-bar" style="animation-delay: 0.6s"></div>
+                    <div class="audio-bar" style="animation-delay: 0.7s"></div>
+                    <div class="audio-bar" style="animation-delay: 0.8s"></div>
+                    <div class="audio-bar" style="animation-delay: 0.9s"></div>
+                </div>
+            </div>
+            
+            <!-- Partner volume control -->
+            <div class="px-6 mb-4">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm text-gray-400">对方音量</span>
+                    <span class="text-sm text-gray-400" id="partnerVolumeValue">75%</span>
+                </div>
+                <input type="range" class="slider" min="0" max="100" value="75" id="partnerVolumeSlider">
+            </div>
+            
+            <!-- My audio wave -->
+            <div class="px-6 mb-2">
+                <span class="text-sm text-gray-400">我的麦克风</span>
+            </div>
+            <div class="audio-wave mb-6" id="myAudioWave">
+                <div class="audio-bar" style="animation-delay: 0.1s"></div>
+                <div class="audio-bar" style="animation-delay: 0.2s"></div>
+                <div class="audio-bar" style="animation-delay: 0.3s"></div>
+                <div class="audio-bar" style="animation-delay: 0.4s"></div>
+                <div class="audio-bar" style="animation-delay: 0.5s"></div>
+                <div class="audio-bar" style="animation-delay: 0.6s"></div>
+                <div class="audio-bar" style="animation-delay: 0.7s"></div>
+            </div>
+            
+            <!-- Controls -->
+            <div class="flex justify-center gap-6 mb-8">
+                <button class="control-button mute-button" id="muteButton">
+                    <i class="fas fa-microphone text-xl"></i>
+                </button>
+                <button class="control-button end-call-button" id="endCallButton">
+                    <i class="fas fa-phone-slash text-xl"></i>
+                </button>
+                <button class="control-button mute-button">
+                    <i class="fas fa-volume-up text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Bottom note -->
+            <div class="text-center mb-6">
+                <p class="text-sm text-gray-400">呼吸深度同步率: 94%</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Partner volume slider
+        const partnerVolumeSlider = document.getElementById('partnerVolumeSlider');
+        const partnerVolumeValue = document.getElementById('partnerVolumeValue');
+        
+        partnerVolumeSlider.addEventListener('input', function() {
+            partnerVolumeValue.textContent = this.value + '%';
+        });
+        
+        // Mute button
+        const muteButton = document.getElementById('muteButton');
+        const myAudioWave = document.getElementById('myAudioWave');
+        
+        muteButton.addEventListener('click', function() {
+            this.classList.toggle('active');
+            
+            if (this.classList.contains('active')) {
+                this.innerHTML = '<i class="fas fa-microphone-slash text-xl"></i>';
+                // Mute audio wave visualization
+                myAudioWave.querySelectorAll('.audio-bar').forEach(bar => {
+                    bar.classList.add('muted');
+                });
+            } else {
+                this.innerHTML = '<i class="fas fa-microphone text-xl"></i>';
+                // Unmute audio wave visualization
+                myAudioWave.querySelectorAll('.audio-bar').forEach(bar => {
+                    bar.classList.remove('muted');
+                });
+            }
+        });
+        
+        // End call button
+        const endCallButton = document.getElementById('endCallButton');
+        
+        endCallButton.addEventListener('click', function() {
+            window.location.href = 'resonance-pod.html';
+        });
+    </script>
+</body>
+</html>

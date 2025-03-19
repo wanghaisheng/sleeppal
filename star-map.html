@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepPal Star Map</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0d1d31 100%);
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .status-bar {
+            height: 44px;
+            padding: 0 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-bar-time {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .status-bar-battery {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+        }
+        
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 83px;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            padding-bottom: 20px;
+        }
+        
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+        }
+        
+        .tab-item.active {
+            color: #22C55E;
+        }
+        
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .tab-label {
+            font-size: 10px;
+        }
+        
+        .sleep-stats-card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nebula-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle at 70% 30%,
+                rgba(34, 197, 94, 0.1) 0%,
+                rgba(59, 130, 246, 0.1) 50%,
+                transparent 70%
+            );
+            filter: blur(15px);
+            z-index: -1;
+        }
+        
+        .cosmic-path {
+            position: relative;
+            height: 80px;
+            margin: 16px 0;
+        }
+        
+        .path-line {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .meteor {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+        
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+        
+        .timeline-mark {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .galaxy-container {
+            position: relative;
+            width: 100%;
+            height: 160px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #111;
+        }
+        
+        .galaxy {
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 30% 50%, rgba(34, 197, 94, 0.2), transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(59, 130, 246, 0.2), transparent 50%);
+            filter: blur(10px);
+        }
+        
+        .star-highlight {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 4px white;
+        }
+        
+        .phase-bubble {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-2"></i>
+        </div>
+        <div class="status-bar-time">9:41</div>
+        <div class="status-bar-battery">
+            <span class="mr-1">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Background -->
+    <div class="stars"></div>
+    
+    <!-- Content -->
+    <div class="px-4 pt-4 pb-24 h-[calc(100vh-44px)] overflow-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold">晨间星图</h1>
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+                <i class="fas fa-user text-white"></i>
+            </div>
+        </div>
+        
+        <!-- Summary Card -->
+        <div class="sleep-stats-card mb-6">
+            <div class="nebula-bg"></div>
+            <div class="text-center mb-4">
+                <span class="text-xs text-gray-400">睡眠效率</span>
+                <div class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-blue-400">85%</div>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-2 mb-4">
+                <div class="text-center">
+                    <div class="text-xl font-bold text-green-400">7.2</div>
+                    <div class="text-xs text-gray-400">小时</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-xl font-bold text-blue-400">18</div>
+                    <div class="text-xs text-gray-400">入睡(分钟)</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-xl font-bold text-purple-400">3</div>
+                    <div class="text-xs text-gray-400">清醒次数</div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <span class="text-xs bg-green-400/20 text-green-400 px-2 py-1 rounded-full">比昨天提升15%</span>
+            </div>
+        </div>
+        
+        <!-- Sleep Path -->
+        <h2 class="text-lg font-bold mb-2">太空漫游轨迹</h2>
+        <div class="sleep-stats-card mb-6">
+            <div class="cosmic-path">
+                <div class="path-line"></div>
+                <!-- Meteors representing body movements -->
+                <div class="meteor" style="top: 30%; left: 20%"></div>
+                <div class="meteor" style="top: 60%; left: 40%"></div>
+                <div class="meteor" style="top: 20%; left: 65%"></div>
+                <div class="meteor" style="top: 70%; left: 85%"></div>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-mark">23:30</div>
+                <div class="timeline-mark">01:30</div>
+                <div class="timeline-mark">03:30</div>
+                <div class="timeline-mark">05:30</div>
+                <div class="timeline-mark">07:30</div>
+            </div>
+            
+            <div class="flex justify-between mt-4 text-xs text-gray-400">
+                <div class="flex items-center">
+                    <div class="w-2 h-2 bg-white rounded-full mr-1"></div>
+                    <span>翻身动作 (4次)</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sleep Phases -->
+        <h2 class="text-lg font-bold mb-2">睡眠周期</h2>
+        <div class="sleep-stats-card mb-6">
+            <div class="flex justify-between mb-2">
+                <div class="flex items-center">
+                    <div class="phase-bubble bg-green-400/20 text-green-400 mr-1">浅</div>
+                    <span class="text-xs">浅睡眠</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="phase-bubble bg-blue-400/20 text-blue-400 mr-1">深</div>
+                    <span class="text-xs">深睡眠</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="phase-bubble bg-purple-400/20 text-purple-400 mr-1">R</div>
+                    <span class="text-xs">REM</span>
+                </div>
+            </div>
+            
+            <div class="h-20 bg-gray-900/60 rounded-lg overflow-hidden relative">
+                <!-- Sleep phase visualization -->
+                <div class="absolute bottom-0 left-0 h-6 w-[15%] bg-green-400/30"></div>
+                <div class="absolute bottom-0 left-[15%] h-12 w-[20%] bg-blue-400/30"></div>
+                <div class="absolute bottom-0 left-[35%] h-8 w-[15%] bg-purple-400/30"></div>
+                <div class="absolute bottom-0 left-[50%] h-6 w-[10%] bg-green-400/30"></div>
+                <div class="absolute bottom-0 left-[60%] h-14 w-[20%] bg-blue-400/30"></div>
+                <div class="absolute bottom-0 left-[80%] h-10 w-[20%] bg-purple-400/30"></div>
+            </div>
+            
+            <div class="mt-4">
+                <div class="flex justify-between text-xs text-gray-400">
+                    <span>深睡时长: 2.4小时</span>
+                    <span>REM时长: 1.8小时</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Galaxy Soul Map -->
+        <h2 class="text-lg font-bold mb-2">灵魂共鸣档案</h2>
+        <div class="sleep-stats-card mb-8">
+            <div class="galaxy-container mb-4">
+                <div class="galaxy"></div>
+                <!-- Random stars -->
+                <div class="star-highlight" style="top: 30%; left: 20%"></div>
+                <div class="star-highlight" style="top: 60%; left: 35%"></div>
+                <div class="star-highlight" style="top: 25%; left: 45%"></div>
+                <div class="star-highlight" style="top: 70%; left: 60%"></div>
+                <div class="star-highlight" style="top: 40%; left: 75%"></div>
+                <div class="star-highlight" style="top: 80%; left: 85%"></div>
+                
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <div class="flex items-center mb-2">
+                        <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center mr-2">
+                            <i class="fas fa-user text-blue-400 text-xs"></i>
+                        </div>
+                        <div class="w-1 h-8 bg-gradient-to-r from-green-400 to-blue-500"></div>
+                        <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center ml-2">
+                            <i class="fas fa-user text-green-400 text-xs"></i>
+                        </div>
+                    </div>
+                    <span class="text-sm font-semibold">92% 灵魂契合度</span>
+                </div>
+            </div>
+            
+            <div class="flex justify-between mb-2">
+                <h3 class="font-semibold">共鸣收集声景</h3>
+                <span class="text-xs text-green-400">保存</span>
+            </div>
+            
+            <div class="bg-gray-900/40 rounded-lg p-3 flex items-center" onclick="window.location.href='soundscape-detail.html'">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400/30 to-purple-500/30 flex items-center justify-center mr-3">
+                    <i class="fas fa-music text-blue-400"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="font-medium">"雨夜鲸鸣"</div>
+                    <div class="text-xs text-gray-400">深海共鸣者 + 你的混合声景</div>
+                </div>
+                <button class="w-8 h-8 rounded-full bg-gray-800/60 flex items-center justify-center">
+                    <i class="fas fa-play text-green-400"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Tab Bar -->
+    <div class="tab-bar">
+        <div class="tab-item" onclick="window.location.href='home.html'">
+            <div class="tab-icon"><i class="fas fa-globe"></i></div>
+            <div class="tab-label">共振星环</div>
+        </div>
+        <div class="tab-item" onclick="window.location.href='sleep-pod.html'">
+            <div class="tab-icon"><i class="fas fa-bed"></i></div>
+            <div class="tab-label">共生舱</div>
+        </div>
+        <div class="tab-item active" onclick="window.location.href='star-map.html'">
+            <div class="tab-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="tab-label">晨间星图</div>
+        </div>
+        <div class="tab-item" onclick="window.location.href='profile.html'">
+            <div class="tab-icon"><i class="fas fa-user"></i></div>
+            <div class="tab-label">我的</div>
+        </div>
+    </div>
+
+    
+</body>
+</html>

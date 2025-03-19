@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepPal Match Success</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0d1d31 100%);
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .status-bar {
+            height: 44px;
+            padding: 0 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-bar-time {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .status-bar-battery {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+        }
+        
+        .success-animation {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+        
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 2;
+            stroke: #22C55E;
+            stroke-miterlimit: 10;
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+        }
+        
+        .checkmark__circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            stroke: #22C55E;
+            fill: none;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+        
+        .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+        
+        @keyframes stroke {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        @keyframes scale {
+            0%, 100% {
+                transform: none;
+            }
+            50% {
+                transform: scale3d(1.1, 1.1, 1);
+            }
+        }
+        
+        @keyframes fill {
+            100% {
+                box-shadow: inset 0px 0px 0px 30px rgba(34, 197, 94, 0.2);
+            }
+        }
+        
+        .ripple {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: ripple 2s linear infinite;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-2"></i>
+        </div>
+        <div class="status-bar-time">9:41</div>
+        <div class="status-bar-battery">
+            <span class="mr-1">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Background -->
+    <div class="stars"></div>
+    
+    <!-- Content -->
+    <div class="flex flex-col items-center justify-center h-[calc(100vh-44px)] p-6">
+        <div class="success-animation mb-6">
+            <div class="ripple"></div>
+            <div class="ripple" style="animation-delay: 0.5s"></div>
+            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
+        </div>
+        
+        <h2 class="text-2xl font-bold mb-2">匹配成功！</h2>
+        <p class="text-gray-300 mb-8 text-center">我们找到了你的完美伴睡伙伴</p>
+        
+        <div class="w-full max-w-sm bg-gray-900/40 backdrop-blur-sm rounded-xl p-6 mb-8">
+            <div class="flex items-center mb-6">
+                <div class="w-16 h-16 rounded-full bg-blue-500/20 flex items-center justify-center mr-4">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=faces&auto=format&q=80" alt="深海共鸣者" class="w-full h-full rounded-full object-cover">
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold">深海共鸣者</h3>
+                    <p class="text-sm text-gray-400">β-5.2Hz · 匹配度: <span class="text-green-400">92%</span></p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="text-center">
+                    <div class="text-sm text-gray-400">心率</div>
+                    <div class="text-xl font-bold text-blue-400">71</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-sm text-gray-400">呼吸频率</div>
+                    <div class="text-xl font-bold text-blue-400">13</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-sm text-gray-400">体温</div>
+                    <div class="text-xl font-bold text-blue-400">36.8°</div>
+                </div>
+            </div>
+            
+            <div class="bg-gray-800/50 rounded-lg p-4 mb-4">
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-tag text-purple-400 mr-2"></i>
+                    <span class="text-sm font-medium">灵魂标签</span>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-xs bg-purple-400/20 rounded-full px-2 py-1">深海偏好</span>
+                    <span class="text-xs bg-purple-400/20 rounded-full px-2 py-1">量子思维</span>
+                    <span class="text-xs bg-purple-400/20 rounded-full px-2 py-1">电子雨声</span>
+                </div>
+            </div>
+            
+            <div class="bg-gray-800/50 rounded-lg p-4 mb-6">
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-comment-alt text-blue-400 mr-2"></i>
+                    <span class="text-sm font-medium">个人介绍</span>
+                </div>
+                <p class="text-sm text-center">"量子思维，电子雨声爱好者，寻找深度共鸣"</p>
+            </div>
+            
+            <button id="connect-button" class="w-full py-3 bg-gradient-to-r from-green-400 to-blue-500 rounded-full font-semibold">
+                开始共鸣
+            </button>
+        </div>
+        
+        <div class="flex gap-4 mb-6 w-full max-w-sm">
+            <button id="view-profile-button" class="flex-1 py-2 bg-gray-800/60 rounded-lg text-sm text-white border border-gray-700 flex items-center justify-center">
+                <i class="fas fa-user mr-2"></i>
+                查看档案
+            </button>
+            <button id="find-other-button" class="flex-1 py-2 bg-gray-800/60 rounded-lg text-sm text-white border border-gray-700 flex items-center justify-center">
+                重新匹配
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('connect-button').addEventListener('click', function() {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> 建立连接中...';
+            this.disabled = true;
+            
+            setTimeout(() => {
+                window.location.href = 'resonance-pod.html';
+            }, 1500);
+        });
+        
+        document.getElementById('view-profile-button').addEventListener('click', function() {
+            window.location.href = 'user-detail.html';
+        });
+        
+        document.getElementById('find-other-button').addEventListener('click', function() {
+            window.location.href = 'match-in-progress.html';
+        });
+        
+        // Add confetti animation
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'absolute';
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.backgroundColor = ['#22C55E', '#3B82F6', '#EC4899', '#8B5CF6'][Math.floor(Math.random() * 4)];
+                confetti.style.borderRadius = '50%';
+                confetti.style.top = '-20px';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.opacity = Math.random() * 0.7 + 0.3;
+                confetti.style.zIndex = '1';
+                
+                document.body.appendChild(confetti);
+                
+                const animationDuration = Math.random() * 3 + 2;
+                confetti.animate([
+                    { transform: 'translateY(0) rotate(0)', opacity: 1 },
+                    { transform: `translateY(100vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: animationDuration * 1000,
+                    easing: 'cubic-bezier(0,0,0.2,1)'
+                });
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, animationDuration * 1000);
+            }
+        }
+        
+        // Run confetti when page loads
+        window.addEventListener('DOMContentLoaded', createConfetti);
+    </script>
+</body>
+</html>

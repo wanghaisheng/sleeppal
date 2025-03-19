@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepPal Resonance Rating</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0d1d31 100%);
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .status-bar {
+            height: 44px;
+            padding: 0 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-bar-time {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .status-bar-battery {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+        }
+        
+        .fadeIn {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .star-rating .star {
+            font-size: 40px;
+            color: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .star-rating .star.active,
+        .star-rating .star:hover {
+            color: #FFD700;
+        }
+        
+        .star-rating .star:hover ~ .star {
+            color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .star-rating:hover .star {
+            color: #FFD700;
+        }
+        
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+        
+        .resonance-tag {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 12px;
+            padding: 8px 12px;
+            font-size: 12px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .resonance-tag.selected {
+            border-color: #22C55E;
+            background: rgba(34, 197, 94, 0.2);
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-2"></i>
+        </div>
+        <div class="status-bar-time">9:41</div>
+        <div class="status-bar-battery">
+            <span class="mr-1">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Background -->
+    <div class="stars"></div>
+    
+    <!-- Content -->
+    <div class="flex flex-col items-center justify-center h-[calc(100vh-44px)] p-6 fadeIn">
+        <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-green-500/20 flex items-center justify-center">
+            <i class="fas fa-check text-green-400 text-3xl"></i>
+        </div>
+        
+        <h2 class="text-2xl font-bold mb-2">共鸣已结束</h2>
+        <p class="text-gray-300 mb-8 text-center">评价此次共鸣体验，帮助我们改进匹配算法</p>
+        
+        <div class="w-full max-w-sm bg-gray-900/40 backdrop-blur-sm rounded-xl p-6 mb-8">
+            <div class="flex items-center mb-6">
+                <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mr-4">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=faces&auto=format&q=80" alt="深海共鸣者" class="w-full h-full rounded-full object-cover">
+                </div>
+                <div>
+                    <h3 class="font-semibold">深海共鸣者</h3>
+                    <p class="text-xs text-gray-400">共鸣时长: 42分钟</p>
+                </div>
+                <div class="ml-auto text-right">
+                    <div class="text-green-400">92%</div>
+                    <div class="text-xs text-gray-400">匹配度</div>
+                </div>
+            </div>
+            
+            <div class="text-center mb-6">
+                <p class="text-sm mb-4">为这次共鸣体验评分</p>
+                <div class="star-rating" dir="rtl">
+                    <i class="fa fa-star star" data-value="5"></i>
+                    <i class="fa fa-star star" data-value="4"></i>
+                    <i class="fa fa-star star" data-value="3"></i>
+                    <i class="fa fa-star star" data-value="2"></i>
+                    <i class="fa fa-star star" data-value="1"></i>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <p class="text-sm mb-2">选择此次共鸣的特点（可多选）</p>
+                <div class="tag-container">
+                    <div class="resonance-tag">心灵安宁</div>
+                    <div class="resonance-tag">入睡更快</div>
+                    <div class="resonance-tag">深度连接</div>
+                    <div class="resonance-tag">声景舒适</div>
+                    <div class="resonance-tag">频率同步</div>
+                    <div class="resonance-tag">极光共振</div>
+                    <div class="resonance-tag">情感共鸣</div>
+                    <div class="resonance-tag">灵魂相通</div>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <p class="text-sm mb-2">分享你的体验（选填）</p>
+                <textarea class="w-full bg-gray-800/60 border border-gray-700 rounded-lg text-white p-3 text-sm" rows="3" placeholder="描述你的共鸣体验..."></textarea>
+            </div>
+            
+            <button id="submit-rating" class="w-full py-3 bg-gradient-to-r from-green-400 to-blue-500 rounded-full font-semibold">
+                提交评价
+            </button>
+        </div>
+        
+        <div class="flex space-x-4 mb-6 w-full max-w-sm">
+            <button id="skip-rating" class="w-full py-2 bg-gray-800/60 rounded-lg text-sm text-white border border-gray-700">
+                跳过评价
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Star rating functionality
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', function() {
+                const value = this.getAttribute('data-value');
+                
+                // Remove active class from all stars
+                document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+                
+                // Add active class to selected star and all stars after it
+                document.querySelectorAll(`.star[data-value="${value}"], .star[data-value="${value}"] ~ .star`).forEach(s => {
+                    s.classList.add('active');
+                });
+            });
+        });
+        
+        // Tag selection functionality
+        document.querySelectorAll('.resonance-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                this.classList.toggle('selected');
+            });
+        });
+        
+        // Submit rating
+        document.getElementById('submit-rating').addEventListener('click', function() {
+            // Get selected stars count
+            const starsCount = document.querySelectorAll('.star.active').length;
+            
+            // Get selected tags
+            const selectedTags = Array.from(document.querySelectorAll('.resonance-tag.selected'))
+                .map(tag => tag.textContent);
+            
+            // Get feedback text
+            const feedback = document.querySelector('textarea').value;
+            
+            // In a real app, this would submit the data to the server
+            console.log('Rating:', starsCount);
+            console.log('Selected tags:', selectedTags);
+            console.log('Feedback:', feedback);
+            
+            // Navigate to home page
+            window.location.href = 'home.html';
+        });
+        
+        // Skip rating
+        document.getElementById('skip-rating').addEventListener('click', function() {
+            window.location.href = 'home.html';
+        });
+    </script>
+</body>
+</html>

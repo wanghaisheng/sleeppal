@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepPal Matching</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0d1d31 100%);
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .status-bar {
+            height: 44px;
+            padding: 0 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-bar-time {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .status-bar-battery {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+        }
+        
+        .shimmer {
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+        
+        .meteor {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            opacity: 0;
+            animation: meteor-fall 1.5s linear forwards;
+        }
+        
+        @keyframes meteor-fall {
+            0% {
+                transform: translateY(-100vh) translateX(0) rotate(45deg) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(-80vh) translateX(20vw) rotate(45deg) scale(1);
+            }
+            100% {
+                transform: translateY(100vh) translateX(100vw) rotate(45deg) scale(1);
+                opacity: 0;
+            }
+        }
+        
+        .pulse-circle {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 15px rgba(34, 197, 94, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+            }
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-2"></i>
+        </div>
+        <div class="status-bar-time">9:41</div>
+        <div class="status-bar-battery">
+            <span class="mr-1">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Background -->
+    <div class="stars"></div>
+    
+    <!-- Content -->
+    <div class="flex flex-col items-center justify-center h-[calc(100vh-44px)] p-6 relative">
+        <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-green-500/20 flex items-center justify-center pulse-circle">
+            <i class="fas fa-sync-alt text-green-400 text-2xl animate-spin"></i>
+        </div>
+        
+        <h2 class="text-xl font-bold mb-2">正在寻找伴睡者</h2>
+        <p class="text-gray-300 mb-6 text-center">搜索匹配中，正在寻找与你共振频率相近的人...</p>
+        
+        <div class="w-full max-w-xs">
+            <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden mb-6">
+                <div class="h-full shimmer bg-gradient-to-r from-green-400 to-blue-500 rounded-full progress-bar" style="width: 60%"></div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-gray-900/40 rounded-lg p-4">
+                    <p class="text-sm text-center mb-1">已搜索用户</p>
+                    <div class="text-2xl font-bold text-center text-green-400 counter" data-target="24">12</div>
+                </div>
+                
+                <div class="bg-gray-900/40 rounded-lg p-4">
+                    <p class="text-sm text-center mb-1">最佳匹配度</p>
+                    <div class="text-2xl font-bold text-center text-green-400 counter" data-target="96">78%</div>
+                </div>
+            </div>
+            
+            <div class="bg-gray-900/40 rounded-lg p-4 mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm">匹配条件</span>
+                    <span class="text-xs text-green-400">已优化</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="bg-gray-800 rounded-lg p-2">
+                        <span class="text-gray-400">身体频率:</span>
+                        <span class="text-white ml-1">β-5.0Hz</span>
+                    </div>
+                    <div class="bg-gray-800 rounded-lg p-2">
+                        <span class="text-gray-400">灵魂类型:</span>
+                        <span class="text-white ml-1">量子浪漫派</span>
+                    </div>
+                    <div class="bg-gray-800 rounded-lg p-2">
+                        <span class="text-gray-400">声景偏好:</span>
+                        <span class="text-white ml-1">电子雨声</span>
+                    </div>
+                    <div class="bg-gray-800 rounded-lg p-2">
+                        <span class="text-gray-400">匹配模式:</span>
+                        <span class="text-white ml-1">均衡配比</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="cancel-button" class="w-full py-3 bg-gray-800/80 border border-gray-700 rounded-full">
+                取消匹配
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Create meteor shower effect
+        function createMeteorShower() {
+            const container = document.body;
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const meteor = document.createElement('div');
+                    meteor.classList.add('meteor');
+                    meteor.style.left = `${Math.random() * 100}%`;
+                    meteor.style.width = `${Math.random() * 2 + 1}px`;
+                    meteor.style.height = `${Math.random() * 80 + 20}px`;
+                    meteor.style.boxShadow = `0 0 ${Math.random() * 5 + 5}px white`;
+                    meteor.style.animationDelay = `${Math.random() * 1}s`;
+                    container.appendChild(meteor);
+                    
+                    // Remove meteor after animation
+                    setTimeout(() => {
+                        meteor.remove();
+                    }, 1500);
+                }, i * 200);
+            }
+        }
+        
+        // Start meteor shower
+        createMeteorShower();
+        
+        // Animate progress bar
+        let width = 60;
+        const progressBar = document.querySelector('.progress-bar');
+        const progressInterval = setInterval(() => {
+            if (width < 95) {
+                width += 1;
+                progressBar.style.width = width + '%';
+            } else {
+                clearInterval(progressInterval);
+                window.location.href = Math.random() > 0.2 ? 'match-success.html' : 'match-failed.html';
+            }
+        }, 100);
+        
+        // Animate counters
+        const counters = document.querySelectorAll('.counter');
+        counters.forEach(counter => {
+            const target = counter.getAttribute('data-target');
+            const isPercentage = counter.textContent.includes('%');
+            let current = parseInt(counter.textContent.replace('%', ''));
+            
+            const interval = setInterval(() => {
+                if (current < target) {
+                    current += 1;
+                    counter.textContent = isPercentage ? current + '%' : current;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 100);
+        });
+        
+        // Cancel button functionality
+        document.getElementById('cancel-button').addEventListener('click', function() {
+            clearInterval(progressInterval);
+            window.location.href = 'home.html';
+        });
+    </script>
+</body>
+</html>

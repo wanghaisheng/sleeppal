@@ -85,26 +85,26 @@
         }
     }
     
-    // 处理来自iframe的消息
+    // Handle demo message
     function handleDemoMessage(event) {
         if (event.data.type === 'demoAction') {
             switch(event.data.action) {
                 case 'next':
-                    // 前进到下一页
+                    // Move to next page
                     if (currentDemoPage < demoSequence.length - 1) {
                         loadDemoPage(currentDemoPage + 1);
                     }
                     break;
                     
                 case 'prev':
-                    // 后退到上一页
+                    // Go back to previous page
                     if (currentDemoPage > 0) {
                         loadDemoPage(currentDemoPage - 1);
                     }
                     break;
                     
                 case 'close':
-                    // 关闭演示
+                    // Close demo
                     closeDemo();
                     break;
             }

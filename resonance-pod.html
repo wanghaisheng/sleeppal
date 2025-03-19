@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepPal共生舱</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0d1d31 100%);
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .status-bar {
+            height: 44px;
+            padding: 0 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-bar-time {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .status-bar-battery {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+        }
+
+        .dna-strand {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+        }
+
+        .dna-line-1, .dna-line-2 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.7;
+            animation: flow 15s linear infinite;
+        }
+
+        .dna-line-1 {
+            background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.5) 30%, rgba(34, 197, 94, 0.2) 70%, transparent);
+            clip-path: path('M0,90 C50,40 100,110 150,60 C200,10 250,80 300,30 C350,0 400,50 450,10 L450,180 L0,180 Z');
+        }
+
+        .dna-line-2 {
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5) 30%, rgba(59, 130, 246, 0.2) 70%, transparent);
+            clip-path: path('M0,30 C50,80 100,30 150,80 C200,130 250,60 300,110 C350,140 400,70 450,120 L450,180 L0,180 Z');
+            animation-delay: 0.5s;
+        }
+
+        @keyframes flow {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(100px); }
+        }
+
+        .pulse-ring {
+            border-radius: 50%;
+            background: rgba(34, 197, 94, 0.15);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.15); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .user-indicators {
+            background: rgba(17, 24, 39, 0.6);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            transition: all 0.3s;
+        }
+
+        .heartbeat {
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.1); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.1); }
+            70% { transform: scale(1); }
+        }
+
+        .aurora-container {
+            position: relative;
+            height: 80px;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .aurora {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(34, 197, 94, 0.1),
+                rgba(59, 130, 246, 0.1),
+                rgba(124, 58, 237, 0.1)
+            );
+            filter: blur(8px);
+            animation: aurora-flow 12s ease-in-out infinite alternate;
+        }
+
+        @keyframes aurora-flow {
+            0% { opacity: 0.5; background-position: 0% 0%; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.5; background-position: 100% 100%; }
+        }
+
+        .control-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .control-button:active {
+            transform: scale(0.95);
+        }
+
+        .end-button {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            border-radius: 2px;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22C55E, #3B82F6);
+            cursor: pointer;
+        }
+
+        .message-bubble {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 16px 16px 16px 4px;
+            padding: 10px 14px;
+            max-width: 70%;
+            margin-bottom: 10px;
+            animation: fadeIn 0.5s;
+        }
+
+        .response-bubble {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 16px 16px 4px 16px;
+            padding: 10px 14px;
+            max-width: 70%;
+            margin-bottom: 10px;
+            align-self: flex-end;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .chat-container {
+            overflow-y: auto;
+            height: 200px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .tab-container {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tab {
+            padding: 10px 0;
+            flex: 1;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .tab.active {
+            color: #22C55E;
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 50%;
+            height: 2px;
+            background: #22C55E;
+            border-radius: 1px;
+        }
+        
+        .tab-content {
+            padding: 16px 0;
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+
+        .sleep-progress {
+            height: 40px;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 8px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #22C55E, #3B82F6);
+            border-radius: 4px;
+            width: 35%;
+            transition: width 1s linear;
+        }
+
+        .progress-label {
+            position: absolute;
+            top: 16px;
+            left: 35%;
+            transform: translateX(-50%);
+            background: rgba(17, 24, 39, 0.8);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #22C55E;
+            margin-right: 6px;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-2"></i>
+        </div>
+        <div class="status-bar-time">9:41</div>
+        <div class="status-bar-battery">
+            <span class="mr-1">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Background -->
+    <div class="stars"></div>
+    
+    <!-- Content -->
+    <div class="h-[calc(100vh-44px)] overflow-auto pb-4">
+        <div class="p-4">
+            <div class="flex items-center mb-4">
+                <button class="mr-4" onclick="window.history.back()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h1 class="text-xl font-bold">共生舱</h1>
+                <div class="ml-auto flex items-center">
+                    <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">
+                        <i class="fas fa-clock mr-1"></i>24:36
+                    </span>
+                </div>
+            </div>
+            
+            <!-- DNA Helix Animation -->
+            <div class="dna-strand mb-4">
+                <div class="dna-line-1"></div>
+                <div class="dna-line-2"></div>
+                
+                <!-- Overlaid indicators -->
+                <div class="absolute top-1/2 left-1/3 transform -translate-x-1/2 -translate-y-1/2">
+                    <div class="w-12 h-12 rounded-full pulse-ring flex items-center justify-center">
+                        <div class="w-8 h-8 rounded-full bg-green-500/30 flex items-center justify-center">
+                            <i class="fas fa-heartbeat text-green-400 heartbeat"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="absolute top-1/2 right-1/3 transform translate-x-1/2 -translate-y-1/2">
+                    <div class="w-12 h-12 rounded-full pulse-ring flex items-center justify-center">
+                        <div class="w-8 h-8 rounded-full bg-blue-500/30 flex items-center justify-center">
+                            <i class="fas fa-heartbeat text-blue-400 heartbeat"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sleep Progress -->
+            <div class="sleep-progress mb-6">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="sleepProgress"></div>
+                </div>
+                <div class="progress-label" id="progressLabel">35% 深度共鸣</div>
+                <div class="flex justify-between text-xs text-gray-400 mt-1">
+                    <span>开始</span>
+                    <span>目标: 2小时</span>
+                </div>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="mb-4">
+                <div class="tab-container">
+                    <div class="tab active" data-tab="vitals">生物共振</div>
+                    <div class="tab" data-tab="chat">语音聊天</div>
+                    <div class="tab" data-tab="settings">设置</div>
+                </div>
+                
+                <!-- Vitals Tab -->
+                <div class="tab-content active" id="vitals-tab">
+                    <!-- Users info -->
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="user-indicators p-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=faces&auto=format&q=80" alt="用户头像" class="w-full h-full rounded-full object-cover">
+                                </div>
+                                <div>
+                                    <h3 class="font-medium text-sm">我的数据</h3>
+                                    <p class="text-xs text-gray-400">β-5.0Hz</p>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-2 text-center">
+                                <div>
+                                    <div class="text-xl font-semibold text-green-400">68</div>
+                                    <div class="text-xs text-gray-400">心率</div>
+                                </div>
+                                <div>
+                                    <div class="text-xl font-semibold text-green-400">14</div>
+                                    <div class="text-xs text-gray-400">呼吸频率</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="user-indicators p-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+                                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=faces&auto=format&q=80" alt="深海共鸣者" class="w-full h-full rounded-full object-cover">
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold">深海共鸣者</h3>
+                                    <p class="text-xs text-gray-400">β-5.2Hz · 连接时长: 24分钟</p>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-2 text-center">
+                                <div>
+                                    <div class="text-xl font-semibold text-blue-400">71</div>
+                                    <div class="text-xs text-gray-400">心率</div>
+                                </div>
+                                <div>
+                                    <div class="text-xl font-semibold text-blue-400">13</div>
+                                    <div class="text-xs text-gray-400">呼吸频率</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Resonance Status -->
+                    <div class="mb-6 bg-gray-900/40 backdrop-filter backdrop-blur-lg rounded-xl p-4">
+                        <h3 class="font-medium mb-3">共鸣状态</h3>
+                        
+                        <!-- Aurora Effect -->
+                        <div class="aurora-container mb-4">
+                            <div class="aurora"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="font-semibold text-white text-opacity-90">
+                                    <i class="fas fa-star text-yellow-400 mr-1"></i>
+                                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-400 to-purple-400">微型极光共振</span>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div class="text-sm">同步率</div>
+                            <div class="text-sm font-semibold text-green-400">93%</div>
+                        </div>
+                        <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden mt-1 mb-3">
+                            <div class="h-full bg-gradient-to-r from-green-400 to-blue-500 rounded-full" style="width: 93%"></div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2 mt-4">
+                            <div class="badge">
+                                <i class="fas fa-heart-pulse text-xs mr-1"></i>
+                                心率同步
+                            </div>
+                            <div class="badge">
+                                <i class="fas fa-wind text-xs mr-1"></i>
+                                呼吸和谐
+                            </div>
+                            <div class="badge">
+                                <i class="fas fa-brain text-xs mr-1"></i>
+                                脑波共振
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Current Soundscape -->
+                    <div class="mb-6 bg-gray-900/40 backdrop-filter backdrop-blur-lg rounded-xl p-4">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-medium">当前声景</h3>
+                            <span class="text-xs text-green-400">更换</span>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400/30 to-purple-500/30 flex items-center justify-center mr-3">
+                                <i class="fas fa-music text-blue-400"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="font-medium">"雨夜鲸鸣"</div>
+                                <div class="text-xs text-gray-400">深海共鸣者 + 你的混合声景</div>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-gray-800/60 flex items-center justify-center">
+                                <i class="fas fa-pause text-white text-xs"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <div class="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-blue-400 to-purple-500" style="width: 45%"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-400 mt-1">
+                                <span>2:05</span>
+                                <span>4:32</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat Tab -->
+                <div class="tab-content" id="chat-tab">
+                    <div class="chat-container mb-4">
+                        <div class="message-bubble self-start">
+                            <p class="text-sm">我最近一直失眠，希望今天能好好睡一觉</p>
+                            <span class="text-xs text-gray-400 block text-right mt-1">23:42</span>
+                        </div>
+                        
+                        <div class="response-bubble">
+                            <p class="text-sm">我也是，工作压力太大了。听说深海声音对放松很有帮助</p>
+                            <span class="text-xs text-gray-400 block text-right mt-1">23:43</span>
+                        </div>
+                        
+                        <div class="message-bubble self-start">
+                            <p class="text-sm">确实，我选了雨夜鲸鸣这个声景，感觉很舒缓</p>
+                            <span class="text-xs text-gray-400 block text-right mt-1">23:45</span>
+                        </div>
+                        
+                        <div class="response-bubble">
+                            <p class="text-sm">很棒的选择！我们的呼吸同步率已经达到90%了，今晚应该能睡个好觉</p>
+                            <span class="text-xs text-gray-400 block text-right mt-1">23:47</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center bg-gray-900/40 rounded-xl p-3">
+                        <button class="w-10 h-10 rounded-full bg-gray-800/60 flex items-center justify-center mr-3">
+                            <i class="fas fa-microphone text-white"></i>
+                        </button>
+                        <input type="text" placeholder="发送消息..." class="bg-transparent flex-1 focus:outline-none text-sm">
+                        <button class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center ml-3">
+                            <i class="fas fa-paper-plane text-green-400"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Settings Tab -->
+                <div class="tab-content" id="settings-tab">
+                    <!-- Volume Controls -->
+                    <div class="mb-6 bg-gray-900/40 backdrop-filter backdrop-blur-lg rounded-xl p-4">
+                        <h3 class="font-medium mb-4">声音设置</h3>
+                        
+                        <div class="mb-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="text-sm">环境音量</div>
+                                <div class="text-sm text-gray-400" id="ambientVolume">65%</div>
+                            </div>
+                            <input type="range" class="slider" min="0" max="100" value="65" id="ambientVolumeSlider">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="text-sm">对方音量</div>
+                                <div class="text-sm text-gray-400" id="partnerVolume">75%</div>
+                            </div>
+                            <input type="range" class="slider" min="0" max="100" value="75" id="partnerVolumeSlider">
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="text-sm">我的麦克风</div>
+                                <div class="text-sm text-gray-400" id="micVolume">80%</div>
+                            </div>
+                            <input type="range" class="slider" min="0" max="100" value="80" id="micVolumeSlider">
+                        </div>
+                    </div>
+                    
+                    <!-- Privacy Settings -->
+                    <div class="mb-6 bg-gray-900/40 backdrop-filter backdrop-blur-lg rounded-xl p-4">
+                        <h3 class="font-medium mb-4">睡眠设置</h3>
+                        
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-moon text-gray-400 mr-3 w-6"></i>
+                                <div>
+                                    <div class="text-sm">自动检测睡眠</div>
+                                    <div class="text-xs text-gray-400">睡着后自动静音麦克风</div>
+                                </div>
+                            </div>
+                            <div class="w-12 h-6 rounded-full bg-green-500/20 relative">
+                                <div class="w-5 h-5 absolute top-0.5 right-0.5 rounded-full bg-green-400"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <i class="fas fa-robot text-gray-400 mr-3 w-6"></i>
+                                <div>
+                                    <div class="text-sm">AI托管模式</div>
+                                    <div class="text-xs text-gray-400">睡着后AI继续陪伴对方</div>
+                                </div>
+                            </div>
+                            <div class="w-12 h-6 rounded-full bg-green-500/20 relative">
+                                <div class="w-5 h-5 absolute top-0.5 right-0.5 rounded-full bg-green-400"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <i class="fas fa-bell-slash text-gray-400 mr-3 w-6"></i>
+                                <div>
+                                    <div class="text-sm">勿扰模式</div>
+                                    <div class="text-xs text-gray-400">仅接收重要通知</div>
+                                </div>
+                            </div>
+                            <div class="w-12 h-6 rounded-full bg-gray-700 relative">
+                                <div class="w-5 h-5 absolute top-0.5 left-0.5 rounded-full bg-gray-400"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Control Buttons -->
+            <div class="fixed bottom-4 left-0 right-0 px-4">
+                <div class="flex justify-center gap-4">
+                    <button class="control-button" title="静音">
+                        <i class="fas fa-microphone text-white"></i>
+                    </button>
+                    
+                    <button class="control-button" title="发送表情">
+                        <i class="fas fa-heart text-white"></i>
+                    </button>
+                    
+                    <button class="control-button end-button" title="结束共鸣" onclick="window.location.href='resonance-rating.html'">
+                        <i class="fas fa-times text-red-400"></i>
+                    </button>
+                    
+                    <button class="control-button" title="声波音乐">
+                        <i class="fas fa-music text-white"></i>
+                    </button>
+                    
+                    <button class="control-button" title="进入语音聊天" onclick="window.location.href='voice-chat.html'">
+                        <i class="fas fa-headset text-white"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Update volume sliders
+        document.getElementById('ambientVolumeSlider').addEventListener('input', function() {
+            document.getElementById('ambientVolume').textContent = this.value + '%';
+        });
+        
+        document.getElementById('partnerVolumeSlider').addEventListener('input', function() {
+            document.getElementById('partnerVolume').textContent = this.value + '%';
+        });
+        
+        document.getElementById('micVolumeSlider').addEventListener('input', function() {
+            document.getElementById('micVolume').textContent = this.value + '%';
+        });
+        
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                document.getElementById(this.dataset.tab + '-tab').classList.add('active');
+            });
+        });
+        
+        // Simulate sleeping progress
+        let progress = 35;
+        function updateProgress() {
+            if (progress < 100) {
+                progress += 1;
+                document.getElementById('sleepProgress').style.width = progress + '%';
+                document.getElementById('progressLabel').style.left = progress + '%';
+                document.getElementById('progressLabel').textContent = progress + '% 深度共鸣';
+                
+                // Simulate different stages of sleep
+                if (progress === 50) {
+                    document.getElementById('progressLabel').textContent = '50% 轻度睡眠';
+                } else if (progress === 75) {
+                    document.getElementById('progressLabel').textContent = '75% 深度睡眠';
+                }
+                
+                setTimeout(updateProgress, 5000); // Update every 5 seconds
+            }
+        }
+        
+        setTimeout(updateProgress, 5000);
+        
+        // Control buttons functionality
+        document.querySelectorAll('.control-button').forEach((button, index) => {
+            if (index !== 2 && index !== 4) { // Exclude end button and voice chat button
+                button.addEventListener('click', function() {
+                    this.classList.toggle('bg-green-500/20');
+                    this.classList.toggle('border-green-500/30');
+                    
+                    // For the mic button
+                    if (index === 0) {
+                        const icon = this.querySelector('i');
+                        if (icon.classList.contains('fa-microphone')) {
+                            icon.classList.remove('fa-microphone');
+                            icon.classList.add('fa-microphone-slash');
+                            icon.classList.add('text-red-400');
+                        } else {
+                            icon.classList.add('fa-microphone');
+                            icon.classList.remove('fa-microphone-slash');
+                            icon.classList.remove('text-red-400');
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

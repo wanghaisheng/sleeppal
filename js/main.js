@@ -262,6 +262,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
+  // Add stars
   addStars();
 
   // 添加视频播放弹窗功能
@@ -410,4 +411,19 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   createStarryAnimation();
+
+  // Only add the event listener if the button exists
+  const startButton = document.getElementById('start-button');
+  if (startButton) {
+    startButton.addEventListener('click', function() {
+      this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> 寻找中...';
+      this.disabled = true;
+      this.classList.add('opacity-75');
+      
+      // In a real app, this would send the matching preferences to the server
+      setTimeout(() => {
+          window.location.href = 'match-in-progress.html';
+      }, 1500);
+    });
+  }
 });

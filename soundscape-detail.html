@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepPal Soundscape Detail</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0d1d31 100%);
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .status-bar {
+            height: 44px;
+            padding: 0 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-bar-time {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .status-bar-battery {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+        }
+        
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 83px;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            padding-bottom: 20px;
+        }
+        
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+        }
+        
+        .tab-item.active {
+            color: #22C55E;
+        }
+        
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .tab-label {
+            font-size: 10px;
+        }
+        
+        .sound-wave {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60px;
+            gap: 3px;
+        }
+        
+        .sound-bar {
+            width: 3px;
+            height: 60%;
+            background: linear-gradient(to top, rgba(34, 197, 94, 0.3), rgba(59, 130, 246, 0.7));
+            border-radius: 3px;
+            animation: sound-wave 1.2s ease-in-out infinite;
+        }
+        
+        @keyframes sound-wave {
+            0%, 100% {
+                height: 20%;
+            }
+            50% {
+                height: 100%;
+            }
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            width: 30%;
+            background: linear-gradient(to right, #22C55E, #3B82F6);
+            border-radius: 2px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        .progress-handle {
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 30%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .galaxy {
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 30% 50%, rgba(34, 197, 94, 0.2), transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(59, 130, 246, 0.2), transparent 50%);
+            filter: blur(30px);
+            opacity: 0.7;
+            animation: rotate 60s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-2"></i>
+        </div>
+        <div class="status-bar-time">9:41</div>
+        <div class="status-bar-battery">
+            <span class="mr-1">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Background -->
+    <div class="stars"></div>
+    
+    <!-- Content -->
+    <div class="h-[calc(100vh-44px-83px)] overflow-auto">
+        <div class="p-4">
+            <div class="flex items-center mb-6">
+                <button class="mr-4" onclick="window.history.back()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h1 class="text-xl font-bold">声景详情</h1>
+            </div>
+            
+            <!-- Soundscape Cover -->
+            <div class="relative aspect-square rounded-xl overflow-hidden mb-6 shadow-lg shadow-blue-500/10">
+                <div class="galaxy"></div>
+                <div class="absolute inset-0 flex flex-col items-center justify-center p-6">
+                    <div class="text-3xl font-bold mb-3">雨夜鲸鸣</div>
+                    <div class="text-gray-300 mb-6">由 深海共鸣者 × 你 创造</div>
+                    <div class="sound-wave mb-4">
+                        <div class="sound-bar" style="animation-delay: 0s;"></div>
+                        <div class="sound-bar" style="animation-delay: 0.2s;"></div>
+                        <div class="sound-bar" style="animation-delay: 0.4s;"></div>
+                        <div class="sound-bar" style="animation-delay: 0.6s;"></div>
+                        <div class="sound-bar" style="animation-delay: 0.8s;"></div>
+                        <div class="sound-bar" style="animation-delay: 0.4s;"></div>
+                        <div class="sound-bar" style="animation-delay: 0.2s;"></div>
+                        <div class="sound-bar" style="animation-delay: 0s;"></div>
+                    </div>
+                    <div class="text-sm text-gray-400">正在播放...</div>
+                </div>
+            </div>
+            
+            <!-- Player Controls -->
+            <div class="mb-8">
+                <div class="progress-bar mb-2">
+                    <div class="progress-fill"></div>
+                    <div class="progress-handle"></div>
+                </div>
+                
+                <div class="flex justify-between text-xs text-gray-400 mb-6">
+                    <span>1:24</span>
+                    <span>4:32</span>
+                </div>
+                
+                <div class="flex justify-center items-center gap-8">
+                    <button class="w-12 h-12 rounded-full bg-gray-800/60 flex items-center justify-center">
+                        <i class="fas fa-backward text-white"></i>
+                    </button>
+                    
+                    <button class="w-16 h-16 rounded-full bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center">
+                        <i class="fas fa-pause text-white text-xl"></i>
+                    </button>
+                    
+                    <button class="w-12 h-12 rounded-full bg-gray-800/60 flex items-center justify-center">
+                        <i class="fas fa-forward text-white"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Soundscape Info -->
+            <div class="bg-gray-900/60 backdrop-blur-md rounded-xl p-5 mb-6">
+                <h3 class="text-md font-semibold mb-3">声景信息</h3>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <div class="text-xs text-gray-400 mb-1">录制日期</div>
+                        <div class="font-medium">2023年7月22日</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-400 mb-1">共鸣强度</div>
+                        <div class="font-medium">92% <span class="text-green-400">极高</span></div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-400 mb-1">声景类型</div>
+                        <div class="font-medium">深海环境音</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-400 mb-1">时长</div>
+                        <div class="font-medium">4分32秒</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="text-xs text-gray-400 mb-1">声景描述</div>
+                    <p class="text-sm text-gray-300">
+                        在雨夜的背景中，融合了深海鲸鱼的神秘鸣叫，营造出空灵而宁静的氛围。通过双方的呼吸同步，生成的共鸣声景能够迅速带来安眠效果。
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="flex space-x-4 mb-8">
+                <button class="flex items-center justify-center flex-1 py-3 bg-gray-800/80 border border-gray-700 rounded-full">
+                    <i class="fas fa-share-alt mr-2"></i>
+                    <span>分享</span>
+                </button>
+                <button class="flex items-center justify-center flex-1 py-3 bg-gray-800/80 border border-gray-700 rounded-full">
+                    <i class="fas fa-download mr-2"></i>
+                    <span>下载</span>
+                </button>
+                <button class="flex items-center justify-center flex-1 py-3 bg-gradient-to-r from-green-400 to-blue-500 rounded-full">
+                    <i class="fas fa-bookmark mr-2"></i>
+                    <span>收藏</span>
+                </button>
+            </div>
+            
+            <!-- Similar Soundscapes -->
+            <h3 class="text-md font-semibold mb-3">相似声景</h3>
+            <div class="space-y-4 mb-6">
+                <div class="flex items-center justify-between bg-gray-800/60 rounded-lg p-3">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400/30 to-blue-500/30 flex items-center justify-center mr-3">
+                            <i class="fas fa-music text-green-400 text-sm"></i>
+                        </div>
+                        <div>
+                            <div class="font-medium text-sm">深海回响</div>
+                            <div class="text-xs text-gray-400">星际旅人 × 量子浪漫派</div>
+                        </div>
+                    </div>
+                    <button class="w-8 h-8 rounded-full bg-gray-700/60 flex items-center justify-center">
+                        <i class="fas fa-play text-green-400 text-xs"></i>
+                    </button>
+                </div>
+                
+                <div class="flex items-center justify-between bg-gray-800/60 rounded-lg p-3">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400/30 to-pink-500/30 flex items-center justify-center mr-3">
+                            <i class="fas fa-music text-purple-400 text-sm"></i>
+                        </div>
+                        <div>
+                            <div class="font-medium text-sm">海底冥想</div>
+                            <div class="text-xs text-gray-400">深海共鸣者 × 宇宙漫游者</div>
+                        </div>
+                    </div>
+                    <button class="w-8 h-8 rounded-full bg-gray-700/60 flex items-center justify-center">
+                        <i class="fas fa-play text-green-400 text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Tab Bar -->
+    <div class="tab-bar">
+        <div class="tab-item" onclick="window.location.href='home.html'">
+            <div class="tab-icon"><i class="fas fa-globe"></i></div>
+            <div class="tab-label">共振星环</div>
+        </div>
+        <div class="tab-item" onclick="window.location.href='sleep-pod.html'">
+            <div class="tab-icon"><i class="fas fa-bed"></i></div>
+            <div class="tab-label">共生舱</div>
+        </div>
+        <div class="tab-item" onclick="window.location.href='star-map.html'">
+            <div class="tab-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="tab-label">晨间星图</div>
+        </div>
+        <div class="tab-item" onclick="window.location.href='profile.html'">
+            <div class="tab-icon"><i class="fas fa-user"></i></div>
+            <div class="tab-label">我的</div>
+        </div>
+    </div>
+</body>
+</html>

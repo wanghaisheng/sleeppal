@@ -326,7 +326,7 @@
                     <i class="fas fa-arrow-right ml-2"></i>
                 </button>
                 
-                <button class="later-btn w-full" onclick="parent.postMessage({type: 'demoAction', action: 'next'}, '*')">
+                <button class="later-btn w-full">
                     稍后再说
                 </button>
             </div>
@@ -375,6 +375,16 @@
                 radio.innerHTML = '<i class="fas fa-check text-xs text-green-400"></i>';
             });
         });
+        
+        // Add navigation functionality if this page is viewed directly (not in iframe)
+        if (window.self === window.top) {
+            document.querySelector('.later-btn').onclick = function() {
+                window.location.href = 'home.html';
+            };
+            document.querySelector('.subscribe-btn').onclick = function() {
+                window.location.href = 'home.html';
+            };
+        }
     </script>
 </body>
 </html>

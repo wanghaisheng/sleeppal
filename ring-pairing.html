@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepPal Ring Pairing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0d1d31 100%);
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .status-bar {
+            height: 44px;
+            padding: 0 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-bar-time {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .status-bar-battery {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+        }
+        
+        .content-container {
+            height: calc(100vh - 44px);
+            overflow-y: auto;
+            padding-bottom: 20px;
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 20px rgba(34, 197, 94, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+            }
+        }
+        
+        .bluetooth-waves {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+        
+        .wave {
+            position: absolute;
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            border-radius: 50%;
+            animation: wave-animation 3s infinite;
+            opacity: 0;
+        }
+        
+        .wave-1 {
+            width: 100%;
+            height: 100%;
+            animation-delay: 0s;
+        }
+        
+        .wave-2 {
+            width: 80%;
+            height: 80%;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0.5s;
+        }
+        
+        .wave-3 {
+            width: 60%;
+            height: 60%;
+            top: 20%;
+            left: 20%;
+            animation-delay: 1s;
+        }
+        
+        @keyframes wave-animation {
+            0% {
+                transform: scale(0.5);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+        }
+        
+        .device-item {
+            background-color: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            transition: all 0.3s;
+        }
+        
+        .device-item:hover {
+            background-color: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+        
+        .connect-btn {
+            background: linear-gradient(135deg, #22c55e, #3b82f6);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        
+        .connect-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        }
+        
+        .step-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background-color: rgba(34, 197, 94, 0.2);
+        }
+        
+        .step.active .step-circle {
+            background-color: #22c55e;
+            color: white;
+        }
+        
+        .ring-animation {
+            animation: ring-float 3s ease-in-out infinite;
+        }
+        
+        @keyframes ring-float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .device-item.connected {
+            background-color: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.5);
+        }
+        
+        #devices-container {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-2"></i>
+        </div>
+        <div class="status-bar-time">9:41</div>
+        <div class="status-bar-battery">
+            <span class="mr-1">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Background -->
+    <div class="stars"></div>
+    
+    <!-- Content -->
+    <div class="content-container p-6">
+        <div class="flex items-center mb-6">
+            <button class="mr-4" onclick="window.location.href='settings.html'">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <h1 class="text-xl font-bold">配对智能戒指</h1>
+        </div>
+        
+        <!-- Progress Steps -->
+        <div class="flex items-center justify-between mb-8">
+            <div class="step active flex flex-col items-center">
+                <div class="step-circle">1</div>
+                <span class="text-xs mt-1 text-green-400">搜索</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step flex flex-col items-center">
+                <div class="step-circle">2</div>
+                <span class="text-xs mt-1 text-gray-400">配对</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step flex flex-col items-center">
+                <div class="step-circle">3</div>
+                <span class="text-xs mt-1 text-gray-400">连接</span>
+            </div>
+        </div>
+        
+        <!-- Pairing Animation -->
+        <div class="mb-8">
+            <div class="bluetooth-waves mb-6">
+                <div class="wave wave-1"></div>
+                <div class="wave wave-2"></div>
+                <div class="wave wave-3"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mb-3">
+                        <img src="img/smart-ring.png" alt="SleepPal智能戒指" class="w-full h-full object-contain">
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <h2 class="text-xl font-bold mb-2">正在搜索智能戒指</h2>
+                    <p class="text-gray-400 text-sm">请确保您的戒指已开机并且处于配对模式</p>
+                </div>
+            </div>
+            
+            <!-- Pairing Instructions -->
+            <div class="bg-gray-900/60 backdrop-blur-md rounded-xl p-4 mb-6">
+                <h3 class="font-semibold mb-3">如何将戒指设置为配对模式?</h3>
+                <ul class="space-y-3 text-sm text-gray-300">
+                    <li class="flex items-start">
+                        <div class="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center mr-2 flex-shrink-0 mt-0.5">
+                            <span class="text-xs text-green-400">1</span>
+                        </div>
+                        <span>确保智能戒指已充电（指示灯呈绿色）</span>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center mr-2 flex-shrink-0 mt-0.5">
+                            <span class="text-xs text-green-400">2</span>
+                        </div>
+                        <span>长按戒指侧面的按钮3秒直到指示灯开始闪烁蓝光</span>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center mr-2 flex-shrink-0 mt-0.5">
+                            <span class="text-xs text-green-400">3</span>
+                        </div>
+                        <span>保持戒指靠近手机以便完成配对</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Available Devices -->
+            <div id="devices-container" class="mb-6 hidden">
+                <h3 class="font-semibold mb-3">可用设备</h3>
+                <div class="space-y-3">
+                    <div class="device-item flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+                                <i class="fas fa-ring text-green-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium">SleepPal Ring S1</div>
+                                <div class="text-xs text-gray-400">SP-R1234</div>
+                            </div>
+                        </div>
+                        <button class="connect-btn">
+                            连接
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Already Paired Devices -->
+            <div class="mb-6">
+                <h3 class="font-semibold mb-3">已配对设备</h3>
+                <div class="space-y-3">
+                    <div class="device-item connected flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+                                <i class="fas fa-ring text-green-400"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium">SleepPal Ring S1</div>
+                                <div class="text-xs text-gray-400">SP-A7890</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full mr-2">已连接</span>
+                            <button class="

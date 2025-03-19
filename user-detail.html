@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepPal User Detail</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0d1d31 100%);
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .status-bar {
+            height: 44px;
+            padding: 0 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-bar-time {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .status-bar-battery {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+        }
+        
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 83px;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            padding-bottom: 20px;
+        }
+        
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+        }
+        
+        .tab-item.active {
+            color: #22C55E;
+        }
+        
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .tab-label {
+            font-size: 10px;
+        }
+        
+        .soul-badge {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #22C55E;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            display: inline-block;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+        
+        .resonance-line {
+            height: 60px;
+            position: relative;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .resonance-wave {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, 
+                rgba(34, 197, 94, 0) 0%, 
+                rgba(34, 197, 94, 0.2) 20%, 
+                rgba(34, 197, 94, 0.4) 40%, 
+                rgba(34, 197, 94, 0.2) 60%, 
+                rgba(34, 197, 94, 0.4) 80%, 
+                rgba(34, 197, 94, 0.1) 100%
+            );
+            clip-path: path('M0,30 C50,10 100,50 150,30 C200,10 250,50 300,30 L300,60 L0,60 Z');
+            animation: wave 10s linear infinite;
+        }
+        
+        @keyframes wave {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(100px); }
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-2"></i>
+        </div>
+        <div class="status-bar-time">9:41</div>
+        <div class="status-bar-battery">
+            <span class="mr-1">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Background -->
+    <div class="stars"></div>
+    
+    <!-- Content -->
+    <div class="h-[calc(100vh-44px)] overflow-auto pb-24">
+        <div class="p-4">
+            <div class="flex items-center mb-6">
+                <button class="mr-4" onclick="window.history.back()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h1 class="text-xl font-bold">用户详情</h1>
+            </div>
+            
+            <!-- User Profile -->
+            <div class="bg-gray-900/60 backdrop-blur-md rounded-xl p-5 mb-6">
+                <div class="flex items-center">
+                    <div class="w-16 h-16 rounded-full bg-blue-500/20 flex items-center justify-center mr-4">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=faces&auto=format&q=80" alt="深海共鸣者" class="w-full h-full rounded-full object-cover">
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold">深海共鸣者</h2>
+                        <p class="text-sm text-gray-400">β-5.2Hz · 活跃于2小时前</p>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <h3 class="text-md font-semibold mb-3">灵魂标签</h3>
+                    <div>
+                        <span class="soul-badge">深海偏好</span>
+                        <span class="soul-badge">量子思维</span>
+                        <span class="soul-badge">电子雨声</span>
+                        <span class="soul-badge">护航星</span>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <h3 class="text-md font-semibold mb-2">个人介绍</h3>
+                    <p class="text-sm text-gray-300">
+                        热爱深海Desk的声音，寻找能够在电子雨声中共同沉眠的伙伴。希望寻找一种平静但有深度的共鸣体验，让彼此的心跳和呼吸逐渐同步。
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Resonance History -->
+            <div class="bg-gray-900/60 backdrop-blur-md rounded-xl p-5 mb-6">
+                <h3 class="text-md font-semibold mb-3">共鸣数据</h3>
+                
+                <div class="grid grid-cols-3 gap-3 mb-4">
+                    <div class="text-center">
+                        <div class="text-xl font-bold text-green-400">78</div>
+                        <div class="text-xs text-gray-400">共鸣次数</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xl font-bold text-green-400">92%</div>
+                        <div class="text-xs text-gray-400">最高匹配度</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xl font-bold text-green-400">46分</div>
+                        <div class="text-xs text-gray-400">平均时长</div>
+                    </div>
+                </div>
+                
+                <div class="resonance-line">
+                    <div class="resonance-wave"></div>
+                </div>
+                
+                <div class="flex justify-between text-xs text-gray-400">
+                    <span>匹配一致率</span>
+                    <span>86%</span>
+                </div>
+            </div>
+            
+            <!-- Collected Soundscapes -->
+            <div class="bg-gray-900/60 backdrop-blur-md rounded-xl p-5 mb-6">
+                <h3 class="text-md font-semibold mb-3">收藏声景</h3>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between bg-gray-800/60 rounded-lg p-3">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400/30 to-purple-500/30 flex items-center justify-center mr-3">
+                                <i class="fas fa-music text-blue-400 text-sm"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-sm">雨夜鲸鸣</div>
+                                <div class="text-xs text-gray-400">共鸣收集</div>
+                            </div>
+                        </div>
+                        <button class="w-8 h-8 rounded-full bg-gray-700/60 flex items-center justify-center">
+                            <i class="fas fa-play text-green-400 text-xs"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center justify-between bg-gray-800/60 rounded-lg p-3">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400/30 to-blue-500/30 flex items-center justify-center mr-3">
+                                <i class="fas fa-music text-green-400 text-sm"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-sm">量子河流</div>
+                                <div class="text-xs text-gray-400">共鸣收集</div>
+                            </div>
+                        </div>
+                        <button class="w-8 h-8 rounded-full bg-gray-700/60 flex items-center justify-center">
+                            <i class="fas fa-play text-green-400 text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="flex space-x-4 mb-8">
+                <button class="flex-1 py-3 bg-gradient-to-r from-green-400 to-blue-500 rounded-full font-semibold">
+                    开始共鸣
+                </button>
+                <button class="flex-1 py-3 bg-gray-800/80 border border-gray-700 rounded-full">
+                    发送明信片
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Tab Bar -->
+    <div class="tab-bar">
+        <div class="tab-item" onclick="window.location.href='home.html'">
+            <div class="tab-icon"><i class="fas fa-globe"></i></div>
+            <div class="tab-label">共振星环</div>
+        </div>
+        <div class="tab-item" onclick="window.location.href='sleep-pod.html'">
+            <div class="tab-icon"><i class="fas fa-bed"></i></div>
+            <div class="tab-label">共生舱</div>
+        </div>
+        <div class="tab-item" onclick="window.location.href='star-map.html'">
+            <div class="tab-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="tab-label">晨间星图</div>
+        </div>
+        <div class="tab-item" onclick="window.location.href='profile.html'">
+            <div class="tab-icon"><i class="fas fa-user"></i></div>
+            <div class="tab-label">我的</div>
+        </div>
+    </div>
+</body>
+</html>

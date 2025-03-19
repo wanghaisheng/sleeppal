@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepPal Match Failed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0d1d31 100%);
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .status-bar {
+            height: 44px;
+            padding: 0 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-bar-time {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .status-bar-battery {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+        }
+        
+        .fadeIn {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-2"></i>
+        </div>
+        <div class="status-bar-time">9:41</div>
+        <div class="status-bar-battery">
+            <span class="mr-1">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Background -->
+    <div class="stars"></div>
+    
+    <!-- Content -->
+    <div class="flex flex-col items-center justify-center h-[calc(100vh-44px)] p-6 fadeIn">
+        <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-red-500/20 flex items-center justify-center">
+            <i class="fas fa-times text-red-400 text-3xl"></i>
+        </div>
+        
+        <h2 class="text-2xl font-bold mb-2">无法找到匹配</h2>
+        <p class="text-gray-300 mb-8 text-center">目前没有合适的共鸣伙伴在线，请稍后再试</p>
+        
+        <div class="w-full max-w-sm bg-gray-900/40 backdrop-blur-sm rounded-xl p-6 mb-8">
+            <h3 class="text-lg font-semibold mb-4">为什么找不到匹配？</h3>
+            <ul class="space-y-3">
+                <li class="flex items-start">
+                    <i class="fas fa-circle text-xs text-gray-400 mt-1.5 mr-3"></i>
+                    <span class="text-sm text-gray-300">当前在线用户较少</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-circle text-xs text-gray-400 mt-1.5 mr-3"></i>
+                    <span class="text-sm text-gray-300">你的共振频率较为独特</span>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-circle text-xs text-gray-400 mt-1.5 mr-3"></i>
+                    <span class="text-sm text-gray-300">匹配算法正在寻找最佳体验</span>
+                </li>
+            </ul>
+            
+            <div class="mt-6 pt-6 border-t border-gray-700">
+                <div class="bg-gray-800/60 rounded-lg p-4 mb-4">
+                    <div class="flex items-center mb-2">
+                        <i class="fas fa-lightbulb text-yellow-400 mr-2"></i>
+                        <span class="text-sm font-medium">匹配建议</span>
+                    </div>
+                    <ul class="text-sm text-gray-300 space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-xs text-green-400 mt-1 mr-2"></i>
+                            <span>调整你的灵魂标签，选择更常见的标签</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-xs text-green-400 mt-1 mr-2"></i>
+                            <span>尝试在用户高峰期（晚上9-11点）匹配</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-xs text-green-400 mt-1 mr-2"></i>
+                            <span>减少匹配限制，尝试更宽松的频率匹配</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flex flex-col space-y-4 w-full max-w-sm">
+            <button id="retry-button" class="w-full py-3 bg-gradient-to-r from-green-400 to-blue-500 rounded-full font-semibold">
+                重新匹配
+            </button>
+            
+            <button id="adjust-button" class="w-full py-3 bg-gray-800/80 border border-gray-700 rounded-full">
+                调整匹配参数
+            </button>
+            
+            <button id="ai-button" class="w-full py-3 bg-gray-800/80 border border-gray-700 rounded-full">
+                尝试AI伴睡精灵
+            </button>
+            
+            <button id="home-button" class="text-gray-400 underline py-2">
+                返回主页
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('retry-button').addEventListener('click', function() {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> 重新匹配中...';
+            this.disabled = true;
+            
+            setTimeout(() => {
+                window.location.href = 'match-in-progress.html';
+            }, 1500);
+        });
+        
+        document.getElementById('adjust-button').addEventListener('click', function() {
+            window.location.href = 'resonance-match.html';
+        });
+        
+        document.getElementById('ai-button').addEventListener('click', function() {
+            window.location.href = 'ai-companion.html';
+        });
+        
+        document.getElementById('home-button').addEventListener('click', function() {
+            window.location.href = 'home.html';
+        });
+    </script>
+</body>
+</html>

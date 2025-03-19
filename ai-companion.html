@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepPal AI Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0d1d31 100%);
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .status-bar {
+            height: 44px;
+            padding: 0 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-bar-time {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .status-bar-battery {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+        }
+        
+        .ai-card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(236, 72, 153, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 16px;
+            transition: all 0.3s;
+        }
+        
+        .ai-card:active {
+            transform: scale(0.98);
+        }
+        
+        .ai-card.selected {
+            border-color: #EC4899;
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.3);
+        }
+        
+        .ai-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 40px;
+            background: rgba(236, 72, 153, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px auto;
+        }
+        
+        .voice-wave {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            height: 40px;
+        }
+        
+        .voice-bar {
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to top, rgba(236, 72, 153, 0.3), rgba(236, 72, 153, 0.7));
+            animation: wave-animation 1s infinite;
+            animation-duration: calc(1s + var(--i) * 0.2s);
+        }
+        
+        @keyframes wave-animation {
+            0%, 100% {
+                height: 20%;
+            }
+            50% {
+                height: 100%;
+            }
+        }
+        
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+        
+        .slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            outline: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #EC4899;
+            cursor: pointer;
+        }
+        
+        .toggle {
+            position: relative;
+            width: 40px;
+            height: 22px;
+            border-radius: 11px;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .toggle.active {
+            background: #EC4899;
+        }
+        
+        .toggle-handle {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: white;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .toggle.active .toggle-handle {
+            left: 20px;
+        }
+        
+        .prompt-text {
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-2"></i>
+        </div>
+        <div class="status-bar-time">9:41</div>
+        <div class="status-bar-battery">
+            <span class="mr-1">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Background -->
+    <div class="stars"></div>
+    
+    <!-- Content -->
+    <div class="px-4 pt-4 pb-24 h-[calc(100vh-44px)] overflow-auto">
+        <div class="flex items-center mb-6">
+            <button class="mr-4" onclick="window.location.href='home.html'">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <h1 class="text-2xl font-bold">AI守护精灵</h1>
+        </div>
+        
+        <div class="mb-8 text-center">
+            <div class="relative w-24 h-24 mx-auto mb-4">
+                <div class="absolute inset-0 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center">
+                    <i class="fas fa-robot text-white text-3xl"></i>
+                </div>
+            </div>
+            <p class="text-gray-300 mb-6">选择你专属的AI伴侣，哄你入眠</p>
+        </div>
+        
+        <!-- AI Selection -->
+        <h2 class="text-lg font-bold mb-4">选择守护精灵</h2>
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <div class="ai-card" onclick="selectAI(this, 'whale')">
+                <div class="ai-avatar">
+                    <i class="fas fa-water text-3xl text-pink-400"></i>
+                </div>
+                <div class="text-center">
+                    <h3 class="font-semibold">机械鲸鱼</h3>
+                    <p class="text-xs text-gray-400">深海环境音主题</p>
+                </div>
+            </div>
+            
+            <div class="ai-card" onclick="selectAI(this, 'tree')">
+                <div class="ai-avatar">
+                    <i class="fas fa-tree text-3xl text-pink-400"></i>
+                </div>
+                <div class="text-center">
+                    <h3 class="font-semibold">古树精灵</h3>
+                    <p class="text-xs text-gray-400">自然声音主题</p>
+                </div>
+            </div>
+            
+            <div class="ai-card" onclick="selectAI(this, 'space')">
+                <div class="ai-avatar">
+                    <i class="fas fa-meteor text-3xl text-pink-400"></i>
+                </div>
+                <div class="text-center">
+                    <h3 class="font-semibold">星际旅人</h3>
+                    <p class="text-xs text-gray-400">宇宙环境音主题</p>
+                </div>
+            </div>
+            
+            <div class="ai-card" onclick="selectAI(this, 'custom')">
+                <div class="ai-avatar">
+                    <i class="fas fa-microphone text-3xl text-pink-400"></i>
+                </div>
+                <div class="text-center">
+                    <h3 class="font-semibold">声纹克隆</h3>
+                    <p class="text-xs text-gray-400">自定义声音</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Voice Demo -->
+        <div class="bg-gray-900/60 backdrop-blur-md rounded-xl p-4 mb-6">
+            <h3 class="font-semibold mb-3">语音示例</h3>
+            <div class="voice-wave mb-4">
+                <div class="voice-bar" style="--i: 0"></div>
+                <div class="voice-bar" style="--i: 1"></div>
+                <div class="voice-bar" style="--i: 2"></div>
+                <div class="voice-bar" style="--i: 3"></div>
+                <div class="voice-bar" style="--i: 4"></div>
+                <div class="voice-bar" style="--i: 5"></div>
+                <div class="voice-bar" style="--i: 6"></div>
+                <div class="voice-bar" style="--i: 7"></div>
+                <div class="voice-bar" style="--i: 8"></div>
+                <div class="voice-bar" style="--i: 9"></div>
+            </div>
+            <p class="prompt-text text-sm text-center">
+                "深呼吸，感受水流包围着你，像是漂浮在深海中，所有的声音都变得柔和而遥远。闭上眼睛，随着波浪起伏，慢慢放松..."
+            </p>
+        </div>
+        
+        <!-- Settings -->
+        <h2 class="text-lg font-bold mb-4">设置</h2>
+        <div class="bg-gray-900/60 backdrop-blur-md rounded-xl p-4 mb-8">
+            <div class="settings-item">
+                <span>语音音量</span>
+                <div class="w-1/2">
+                    <input type="range" class="slider" min="0" max="100" value="70">
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <span>背景音量</span>
+                <div class="w-1/2">
+                    <input type="range" class="slider" min="0" max="100" value="50">
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <span>定时关闭</span>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-400 mr-2">30分钟</span>
+                    <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <span>睡眠检测</span>
+                <div class="toggle active" onclick="this.classList.toggle('active')">
+                    <div class="toggle-handle"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Start Button -->
+        <button id="start-button" class="w-full py-4 bg-gradient-to-r from-pink-400 to-rose-500 rounded-full font-bold text-white text-center mb-8">
+            开始伴睡
+        </button>
+    </div>
+    
+    <script>
+        let selectedAI = null;
+        
+        function selectAI(element, ai) {
+            // Clear previous selection
+            document.querySelectorAll('.ai-card').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Select current
+            element.classList.add('selected');
+            selectedAI = ai;
+            
+            // Update voice sample based on selection
+            updateVoiceSample(ai);
+        }
+        
+        function updateVoiceSample(ai) {
+            const promptText = document.querySelector('.prompt-text');
+            
+            switch(ai) {
+                case 'whale':
+                    promptText.textContent = "深呼吸，感受水流包围着你，像是漂浮在深海中，所有的声音都变得柔和而遥远。闭上眼睛，随着波浪起伏，慢慢放松...";
+                    break;
+                case 'tree':
+                    promptText.textContent = "闭上眼睛，聆听风吹过树叶的声音，感受阳光透过树叶洒在脸上的温暖。林间的小溪潺潺流过，带走你的烦恼...";
+                    break;
+                case 'space':
+                    promptText.textContent = "想象你正在星空中漂浮，远离地球的喧嚣。宇宙的寂静包围着你，只有恒星发出的微弱光芒陪伴着你。放松你的身体，任由思绪飘向无尽的太空...";
+                    break;
+                case 'custom':
+                    promptText.textContent = "使用你喜欢的声音，说出你想听的话。个性化你的睡眠体验，让熟悉的声音伴你入眠...";
+                    break;
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const startButton = document.getElementById('start-button');
+            
+            startButton.addEventListener('click', function() {
+                // In a real app, this would start the AI companion experience
+                window.location.href = 'sleep-pod.html';
+            });
+        });
+    </script>
+</body>
+</html>

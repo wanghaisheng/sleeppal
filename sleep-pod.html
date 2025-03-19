@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepPal Sleep Pod</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0d1d31 100%);
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .status-bar {
+            height: 44px;
+            padding: 0 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-bar-time {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .status-bar-battery {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+        }
+        
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 83px;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            padding-bottom: 20px;
+        }
+        
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+        }
+        
+        .tab-item.active {
+            color: #22C55E;
+        }
+        
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .tab-label {
+            font-size: 10px;
+        }
+        
+        .dna-helix {
+            position: relative;
+            height: 120px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .dna-strand {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .dna-line-1 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.5) 20%, rgba(34, 197, 94, 0.2) 50%, transparent);
+            clip-path: path('M0,60 C50,20 100,80 150,40 C200,0 250,60 300,20 C350,0 400,60 450,20 L450,120 L0,120 Z');
+            animation: wave1 10s linear infinite;
+        }
+        
+        .dna-line-2 {
+            position: absolute;
+            top: 0;
+            left: -50px;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5) 20%, rgba(59, 130, 246, 0.2) 50%, transparent);
+            clip-path: path('M0,20 C50,60 100,20 150,60 C200,100 250,40 300,80 C350,100 400,60 450,80 L450,120 L0,120 Z');
+            animation: wave2 15s linear infinite;
+        }
+        
+        @keyframes wave1 {
+            0% { transform: translateX(-50px); }
+            100% { transform: translateX(50px); }
+        }
+        
+        @keyframes wave2 {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(100px); }
+        }
+        
+        .biometric-card {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 16px;
+        }
+        
+        .vitals-graph {
+            height: 60px;
+            position: relative;
+            margin: 10px 0;
+        }
+        
+        .vitals-line {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 40px;
+            background: rgba(34, 197, 94, 0.2);
+            clip-path: path('M0,40 C20,30 40,35 60,25 C80,15 100,35 120,30 C140,25 160,15 180,25 C200,35 220,30 240,20 C260,10 280,30 300,25 L300,40 L0,40 Z');
+        }
+        
+        .vitals-line-2 {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 40px;
+            background: rgba(59, 130, 246, 0.2);
+            clip-path: path('M0,30 C20,20 40,30 60,20 C80,10 100,30 120,20 C140,10 160,30 180,20 C200,10 220,35 240,25 C260,15 280,25 300,20 L300,40 L0,40 Z');
+        }
+        
+        .partner-pulse {
+            background: rgba(17, 24, 39, 0.4);
+            border-radius: 12px;
+            padding: 12px;
+        }
+        
+        .aurora-container {
+            position: relative;
+            height: 100px;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 12px;
+            margin-top: 16px;
+        }
+        
+        .aurora {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(34, 197, 94, 0.1),
+                rgba(59, 130, 246, 0.1),
+                rgba(124, 58, 237, 0.1),
+                rgba(236, 72, 153, 0.1)
+            );
+            filter: blur(10px);
+            animation: aurora-flow 15s ease-in-out infinite alternate;
+        }
+        
+        @keyframes aurora-flow {
+            0% {
+                opacity: 0.5;
+                background-position: 0% 0%;
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                opacity: 0.5;
+                background-position: 100% 100%;
+            }
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-2"></i>
+        </div>
+        <div class="status-bar-time">9:41</div>
+        <div class="status-bar-battery">
+            <span class="mr-1">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Background -->
+    <div class="stars"></div>
+    
+    <!-- Content -->
+    <div class="px-4 pt-4 pb-24 h-[calc(100vh-44px)] overflow-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold">共生舱</h1>
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center">
+                <i class="fas fa-user text-white"></i>
+            </div>
+        </div>
+        
+        <!-- DNA Helix -->
+        <div class="dna-helix mb-6">
+            <div class="dna-strand">
+                <div class="dna-line-1"></div>
+                <div class="dna-line-2"></div>
+            </div>
+        </div>
+        
+        <!-- Vital Stats -->
+        <div class="biometric-card mb-6">
+            <div class="flex justify-between mb-3">
+                <h2 class="font-semibold">生物节律同步</h2>
+                <span class="text-green-400">87%</span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="text-center">
+                    <div class="text-xl font-bold text-green-400">68</div>
+                    <div class="text-xs text-gray-400">我的心率</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-xl font-bold text-blue-400">71</div>
+                    <div class="text-xs text-gray-400">对方心率</div>
+                </div>
+            </div>
+            
+            <div class="vitals-graph">
+                <div class="vitals-line"></div>
+                <div class="vitals-line-2"></div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="text-center">
+                    <div class="text-xl font-bold text-green-400">14</div>
+                    <div class="text-xs text-gray-400">我的呼吸频率</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-xl font-bold text-blue-400">13</div>
+                    <div class="text-xs text-gray-400">对方呼吸频率</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Partner Card -->
+        <div class="biometric-card mb-6">
+            <div class="flex items-center mb-3">
+                <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mr-3">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=faces&auto=format&q=80" alt="深海共鸣者" class="w-full h-full rounded-full object-cover">
+                </div>
+                <div>
+                    <h3 class="font-semibold">深海共鸣者</h3>
+                    <p class="text-xs text-gray-400">β-5.2Hz · 连接时长: 24分钟</p>
+                </div>
+            </div>
+            
+            <div class="partner-pulse">
+                <div class="flex justify-between mb-2">
+                    <span class="text-xs text-gray-400">交感神经波动</span>
+                    <span class="text-xs text-green-400">稳定</span>
+                </div>
+                <div class="h-2 w-full bg-gray-700 rounded overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-green-400 to-blue-500 rounded" style="width: 75%"></div>
+                </div>
+            </div>
+            
+            <div class="aurora-container">
+                <div class="aurora"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <span class="font-semibold text-white text-opacity-80">检测到微型极光共振</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Controls -->
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <button class="bg-gray-800/60 border border-green-500/30 rounded-xl py-3 flex flex-col items-center" onclick="window.location.href='voice-chat.html'">
+                <i class="fas fa-volume-up text-green-400 mb-2"></i>
+                <span class="text-sm">环境音</span>
+            </button>
+            <button class="bg-gray-800/60 border border-blue-500/30 rounded-xl py-3 flex flex-col items-center">
+                <i class="fas fa-comment-alt text-blue-400 mb-2"></i>
+                <span class="text-sm">发送明信片</span>
+            </button>
+        </div>
+        
+        <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-4 mb-8">
+            <h3 class="font-semibold mb-2">AI托管模式</h3>
+            <p class="text-sm text-gray-400 mb-3">当您入睡后，AI将自动接管并继续陪伴您的伴侣。</p>
+            <div class="flex justify-between items-center">
+                <span class="text-sm">自动激活</span>
+                <div class="w-12 h-6 rounded-full bg-green-500/20 relative">
+                    <div class="w-5 h-5 rounded-full bg-green-400 absolute top-0.5 right-0.5"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Tab Bar -->
+    <div class="tab-bar">
+        <div class="tab-item" onclick="window.location.href='home.html'">
+            <div class="tab-icon"><i class="fas fa-globe"></i></div>
+            <div class="tab-label">共振星环</div>
+        </div>
+        <div class="tab-item active" onclick="window.location.href='sleep-pod.html'">
+            <div class="tab-icon"><i class="fas fa-bed"></i></div>
+            <div class="tab-label">共生舱</div>
+        </div>
+        <div class="tab-item" onclick="window.location.href='star-map.html'">
+            <div class="tab-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="tab-label">晨间星图</div>
+        </div>
+        <div class="tab-item" onclick="window.location.href='profile.html'">
+            <div class="tab-icon"><i class="fas fa-user"></i></div>
+            <div class="tab-label">我的</div>
+        </div>
+    </div>
+</body>
+</html>
