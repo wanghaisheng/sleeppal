@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # MassRDAP - developed by acidvegas (https://git.acid.vegas/massrdap)
-
+from getbrowser import setup_chrome
 import asyncio
 import logging
 import json
@@ -380,8 +380,7 @@ async def fetch_cloudflare_radar_data(domain):
                 print(f"Failed to get 200 OK status code, status code: {response.status}")
                 return False
 
-def process_domains_screensht(domains, outfile,counts):
-        from setup_chrome import getbrowser
+def process_domains_screensht(domains, outfile,counts=0):
         browser = setup_chrome()
 
         concurrency=5

@@ -12,20 +12,42 @@
   <meta http-equiv="Content-Language" content="en">
 
   <!-- Canonical Link -->
-  <link rel="canonical" href="https://www.yourwebsite.com/privacy-policy" />
+  <link rel="canonical" href="" id="canonicalLink" />
 
   <!-- Open Graph for Social Media -->
   <meta property="og:title" content="Privacy Policy - Impulse - Brain Training Games">
   <meta property="og:description" content="Read the privacy policy of Impulse - Brain Training Games.">
-  <meta property="og:image" content="https://www.yourwebsite.com/privacy-policy-image.jpg">
-  <meta property="og:url" content="https://www.yourwebsite.com/privacy-policy">
+  <meta property="og:image" content="" id="ogImage">
+  <meta property="og:url" content="" id="ogUrl">
   <meta property="og:type" content="website">
 
   <!-- Twitter Card Meta Tags -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Privacy Policy - Impulse - Brain Training Games">
   <meta name="twitter:description" content="Read the privacy policy of Impulse - Brain Training Games.">
-  <meta name="twitter:image" content="https://www.yourwebsite.com/privacy-policy-image.jpg">
+  <meta name="twitter:image" content="" id="twitterImage">
+
+  <!-- Load configuration -->
+  <script>
+    // Fetch the configuration file
+    fetch('/config.json')
+      .then(response => response.json())
+      .then(config => {
+        // Set the base URL from config
+        const baseUrl = config.baseUrl;
+        
+        // Update canonical link
+        document.getElementById('canonicalLink').href = `${baseUrl}/privacy-policy`;
+        
+        // Update Open Graph URLs
+        document.getElementById('ogImage').content = `${baseUrl}/privacy-policy-image.jpg`;
+        document.getElementById('ogUrl').content = `${baseUrl}/privacy-policy`;
+        
+        // Update Twitter image
+        document.getElementById('twitterImage').content = `${baseUrl}/privacy-policy-image.jpg`;
+      })
+      .catch(error => console.error('Error loading configuration:', error));
+  </script>
 
   <title>Privacy Policy - Impulse - Brain Training Games</title>
 

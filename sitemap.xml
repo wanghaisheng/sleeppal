@@ -2,31 +2,25 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>https://sleeppal.heytcm.com/</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/ai-companion</loc>
-        <lastmod>2025-03-19</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.9</priority>
-    </url>
-    <url>
-        <loc>https://sleeppal.heytcm.com/de</loc>
-        <lastmod>2025-03-12</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/flash-match</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/home</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
@@ -38,61 +32,61 @@
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/match-failed</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/match-in-progress</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/match-success</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/old-friends</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/onboarding-1</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/onboarding-2</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/onboarding-3</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/paywall</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/privacy</loc>
-        <lastmod>2025-03-12</lastmod>
+        <lastmod>2025-03-19</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/profile</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
@@ -104,19 +98,19 @@
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/resonance-match</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/resonance-pod</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/resonance-rating</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
@@ -128,49 +122,43 @@
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/settings</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/sleep-pod</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/soundscape-detail</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/star-map</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/terms</loc>
-        <lastmod>2025-03-12</lastmod>
+        <lastmod>2025-03-19</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/user-detail</loc>
-        <lastmod>2025-03-19</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://sleeppal.heytcm.com/voice-chat</loc>
-        <lastmod>2025-03-19</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.9</priority>
-    </url>
-    <url>
-        <loc>https://sleeppal.heytcm.com/zh</loc>
-        <lastmod>2025-03-12</lastmod>
+        <lastmod>2025-03-23</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
