@@ -461,14 +461,25 @@
         }
         
         // Call the function when the page loads
-        window.addEventListener('DOMContentLoaded', generateStars);
+        window.addEventListener('DOMContentLoaded', function() {
+            generateStars();
+            
+            // Check login state
+            if(!localStorage.getItem('sleeppal_logged_in')) {
+                window.location.href = 'login.html';
+            }
+        });
         
         // Add navigation functionality if this page is viewed directly (not in iframe)
         if (window.self === window.top) {
             document.querySelector('.next-button').onclick = function() {
+                // Mark as onboarded
+                localStorage.setItem('sleeppal_onboarded', 'true');
                 window.location.href = 'paywall.html';
             };
             document.querySelector('.skip-button').onclick = function() {
+                // Mark as onboarded
+                localStorage.setItem('sleeppal_onboarded', 'true');
                 window.location.href = 'home.html';
             };
         }

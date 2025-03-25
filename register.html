@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SleepPal Register</title>
+    <title>SleepPal Registration</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -52,115 +52,75 @@
             z-index: -1;
         }
         
-        .content-container {
-            height: calc(100vh - 44px);
-            overflow-y: auto;
-            padding-bottom: 20px;
-        }
-        
         .input-field {
-            background-color: rgba(17, 24, 39, 0.6);
+            background: rgba(17, 24, 39, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 12px 16px;
             color: white;
-            width: 100%;
+            outline: none;
             transition: all 0.3s;
         }
         
         .input-field:focus {
-            border-color: rgba(34, 197, 94, 0.5);
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+            border-color: rgba(34, 197, 94, 0.4);
+            box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.1);
         }
         
-        .register-btn {
-            background: linear-gradient(135deg, #22c55e, #3b82f6);
+        .register-button {
+            background: linear-gradient(135deg, #22C55E, #3B82F6);
             color: white;
             font-size: 16px;
             font-weight: 600;
             padding: 12px;
-            border-radius: 10px;
+            border-radius: 12px;
             width: 100%;
             transition: all 0.3s;
         }
         
-        .register-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+        .register-button:active {
+            transform: scale(0.98);
         }
         
-        .social-login-btn {
-            background-color: rgba(17, 24, 39, 0.6);
+        .social-login-button {
+            background: rgba(17, 24, 39, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 12px;
             color: white;
+            width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
             transition: all 0.3s;
         }
         
-        .social-login-btn:hover {
-            background-color: rgba(17, 24, 39, 0.8);
-            border-color: rgba(255, 255, 255, 0.2);
+        .social-login-button:active {
+            transform: scale(0.98);
         }
         
-        .floating-particles {
-            position: absolute;
+        .demo-button {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #22C55E;
+            border-radius: 12px;
+            padding: 12px;
             width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            overflow: hidden;
-            z-index: -1;
+            transition: all 0.3s;
         }
         
-        .particle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: rgba(34, 197, 94, 0.3);
-            animation: float 15s infinite linear;
+        .demo-button:active {
+            transform: scale(0.98);
         }
         
         @keyframes float {
-            0% {
-                transform: translateY(100vh) translateX(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-20vh) translateX(20px);
-                opacity: 0;
-            }
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
         }
         
-        .tab-button {
-            padding: 10px;
-            border-bottom: 2px solid transparent;
-            transition: all 0.3s;
-        }
-        
-        .tab-button.active {
-            border-bottom-color: #22c55e;
-            color: #22c55e;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
+        .floating {
+            animation: float 6s ease-in-out infinite;
         }
     </style>
 </head>
@@ -180,184 +140,336 @@
     
     <!-- Background -->
     <div class="stars"></div>
-    <div class="floating-particles" id="particles"></div>
     
     <!-- Content -->
-    <div class="content-container p-6">
-        <div class="flex items-center mb-6">
-            <button class="mr-4" onclick="window.location.href='login.html'">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <h1 class="text-xl font-bold">创建账号</h1>
-        </div>
-        
-        <div class="w-full max-w-md mx-auto">
-            <!-- Registration Tabs -->
-            <div class="flex mb-6 border-b border-gray-700">
-                <button class="tab-button active flex-1" data-tab="email-tab">邮箱注册</button>
-                <button class="tab-button flex-1" data-tab="phone-tab">手机号注册</button>
-            </div>
-            
-            <!-- Email Registration Tab -->
-            <div id="email-tab" class="tab-content active space-y-4">
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-400 mb-1">邮箱</label>
-                    <input type="email" id="email" class="input-field" placeholder="请输入邮箱地址">
-                </div>
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-400 mb-1">设置密码</label>
-                    <input type="password" id="password" class="input-field" placeholder="至少8位，包含字母和数字">
-                </div>
-                <div>
-                    <label for="confirm-password" class="block text-sm font-medium text-gray-400 mb-1">确认密码</label>
-                    <input type="password" id="confirm-password" class="input-field" placeholder="请再次输入密码">
-                </div>
-                <div class="flex items-start mt-4">
-                    <div class="flex items-center h-5">
-                        <input id="terms" name="terms" type="checkbox" class="h-4 w-4 rounded border-gray-700 text-green-500 focus:ring-green-500">
-                    </div>
-                    <div class="ml-3 text-sm">
-                        <label for="terms" class="text-gray-400">我同意SleepPal的<a href="#" class="text-green-400">服务条款</a>和<a href="#" class="text-green-400">隐私政策</a></label>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Phone Registration Tab -->
-            <div id="phone-tab" class="tab-content space-y-4">
-                <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-400 mb-1">手机号</label>
-                    <div class="flex gap-2">
-                        <div class="w-20">
-                            <select class="input-field text-sm" id="country-code">
-                                <option value="+86">+86</option>
-                                <option value="+1">+1</option>
-                                <option value="+44">+44</option>
-                                <option value="+81">+81</option>
-                                <option value="+82">+82</option>
-                            </select>
-                        </div>
-                        <input type="tel" id="phone" class="input-field flex-1" placeholder="请输入手机号">
-                    </div>
-                </div>
-                <div>
-                    <label for="verification-code" class="block text-sm font-medium text-gray-400 mb-1">验证码</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="verification-code" class="input-field" placeholder="请输入验证码">
-                        <button class="bg-gray-700 text-white px-4 rounded-lg text-sm whitespace-nowrap">获取验证码</button>
-                    </div>
-                </div>
-                <div>
-                    <label for="phone-password" class="block text-sm font-medium text-gray-400 mb-1">设置密码</label>
-                    <input type="password" id="phone-password" class="input-field" placeholder="至少8位，包含字母和数字">
-                </div>
-                <div class="flex items-start mt-4">
-                    <div class="flex items-center h-5">
-                        <input id="terms-phone" name="terms-phone" type="checkbox" class="h-4 w-4 rounded border-gray-700 text-green-500 focus:ring-green-500">
-                    </div>
-                    <div class="ml-3 text-sm">
-                        <label for="terms-phone" class="text-gray-400">我同意SleepPal的<a href="#" class="text-green-400">服务条款</a>和<a href="#" class="text-green-400">隐私政策</a></label>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Register Button -->
-            <div class="mt-8">
-                <button type="button" class="register-btn" onclick="window.location.href='onboarding-1.html'">
-                    注册并继续
+    <div class="flex flex-col items-center justify-center min-h-[calc(100vh-44px)] p-6">
+        <div class="w-full max-w-sm mb-10">
+            <div class="mb-6">
+                <button class="text-gray-400" onclick="window.location.href='login.html'">
+                    <i class="fas fa-chevron-left mr-2"></i>
+                    返回登录
                 </button>
             </div>
             
-            <!-- Social Registration -->
-            <div class="relative my-6">
-                <div class="absolute inset-0 flex items-center">
-                    <div class="w-full border-t border-gray-700"></div>
+            <div class="text-center mb-10">
+                <div class="relative w-24 h-24 mx-auto mb-6 floating">
+                    <div class="absolute inset-0 rounded-full bg-gradient-to-br from-green-400/30 to-blue-500/30 animate-pulse"></div>
+                    <div class="relative flex items-center justify-center w-full h-full">
+                        <i class="fas fa-moon text-4xl text-green-400"></i>
+                    </div>
                 </div>
-                <div class="relative flex justify-center">
-                    <span class="px-3 bg-[#0d1d31] text-gray-400 text-sm">或使用以下方式注册</span>
-                </div>
+                <h1 class="text-3xl font-bold mb-2">创建账号</h1>
+                <p class="text-gray-400">加入SleepPal，开始灵魂共鸣之旅</p>
             </div>
             
-            <div class="grid grid-cols-3 gap-4 mb-8">
-                <button class="social-login-btn">
-                    <i class="fab fa-weixin text-green-500"></i>
+            <form id="register-form" class="space-y-4 mb-6">
+                <div>
+                    <input type="text" id="username" placeholder="用户名" class="input-field w-full">
+                </div>
+                <div>
+                    <input type="email" id="email" placeholder="邮箱" class="input-field w-full">
+                </div>
+                <div>
+                    <input type="password" id="password" placeholder="密码" class="input-field w-full">
+                </div>
+                <div>
+                    <input type="password" id="confirm-password" placeholder="确认密码" class="input-field w-full">
+                </div>
+                <div class="flex items-start">
+                    <input type="checkbox" id="terms" class="mt-1 mr-2 h-4 w-4 rounded border-gray-700 text-green-500 focus:ring-green-500">
+                    <label for="terms" class="text-sm text-gray-400">
+                        我已阅读并同意 <a href="#" class="text-green-400">用户协议</a> 和 <a href="#" class="text-green-400">隐私政策</a>
+                    </label>
+                </div>
+                <button type="submit" class="register-button">
+                    注册
                 </button>
-                <button class="social-login-btn">
-                    <i class="fab fa-apple text-white"></i>
-                </button>
-                <button class="social-login-btn">
-                    <i class="fab fa-google text-red-400"></i>
-                </button>
+            </form>
+            
+            <div class="relative flex items-center justify-center mb-6">
+                <div class="flex-grow h-px bg-gray-800"></div>
+                <span class="mx-4 text-sm text-gray-500">或者</span>
+                <div class="flex-grow h-px bg-gray-800"></div>
             </div>
             
-            <!-- Login Link -->
-            <div class="text-center">
-                <p class="text-gray-400">
-                    已有账号? 
-                    <a href="login.html" class="text-green-400 hover:text-green-300">立即登录</a>
+            <div class="text-center space-y-4">
+                <button id="demo-button" class="demo-button font-medium">
+                    <i class="fas fa-rocket mr-2"></i>
+                    使用演示账号体验
+                </button>
+                
+                <p class="text-sm text-gray-400">
+                    已有账号？ <a href="login.html" class="text-green-400">立即登录</a>
                 </p>
             </div>
         </div>
-    </body>
+    </div>
     
     <script>
-        // Tab switching
-        document.querySelectorAll('.tab-button').forEach(tab => {
-            tab.addEventListener('click', function() {
-                // Remove active class from all tabs
-                document.querySelectorAll('.tab-button').forEach(t => {
-                    t.classList.remove('active');
-                });
-                
-                // Add active class to clicked tab
-                this.classList.add('active');
-                
-                // Hide all tab contents
-                document.querySelectorAll('.tab-content').forEach(content => {
-                    content.classList.remove('active');
-                });
-                
-                // Show the selected tab content
-                const tabId = this.getAttribute('data-tab');
-                document.getElementById(tabId).classList.add('active');
-            });
+        document.getElementById('register-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const terms = document.getElementById('terms').checked;
+            
+            // Simple validation
+            if (!username || !email || !password || !confirmPassword) {
+                alert('请填写所有字段');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                alert('两次密码输入不一致');
+                return;
+            }
+            
+            if (!terms) {
+                alert('请阅读并同意用户协议和隐私政策');
+                return;
+            }
+            
+            // Store login state
+            localStorage.setItem('sleeppal_logged_in', 'true');
+            localStorage.setItem('sleeppal_user', email);
+            
+            // Redirect to onboarding
+            window.location.href = 'onboarding-1.html';
         });
         
-        // Create floating particles
-        function createParticles() {
-            const container = document.getElementById('particles');
-            const particleCount = 20;
+        document.getElementById('demo-button').addEventListener('click', function() {
+            // Set demo user
+            localStorage.setItem('sleeppal_logged_in', 'true');
+            localStorage.setItem('sleeppal_user', 'demo@sleeppal.com');
+            localStorage.setItem('sleeppal_demo', 'true');
             
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random size
-                const size = Math.random() * 4 + 2;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Random position
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                
-                // Random color (green or blue tint)
-                const color = Math.random() > 0.5 ? 
-                    `rgba(34, 197, 94, ${Math.random() * 0.3 + 0.1})` : 
-                    `rgba(59, 130, 246, ${Math.random() * 0.3 + 0.1})`;
-                particle.style.background = color;
-                
-                // Random animation duration and delay
-                const duration = Math.random() * 20 + 10;
-                const delay = Math.random() * 10;
-                particle.style.animationDuration = `${duration}s`;
-                particle.style.animationDelay = `${delay}s`;
-                
-                container.appendChild(particle);
-            }
-        }
-        
-        // Call the function when the page loads
-        window.addEventListener('DOMContentLoaded', createParticles);
+            // Go to onboarding
+            window.location.href = 'onboarding-1.html';
+        });
     </script>
 </body>
 </html>
+```
+</assistant<|end_header_id|>
+
+```register.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SleepPal Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #000000 0%, #0d1d31 100%);
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .status-bar {
+            height: 44px;
+            padding: 0 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .status-bar-time {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .status-bar-battery {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255, 255, 255, 0.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+        }
+        
+        .input-field {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: white;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .input-field:focus {
+            border-color: rgba(34, 197, 94, 0.4);
+            box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.1);
+        }
+        
+        .register-button {
+            background: linear-gradient(135deg, #22C55E, #3B82F6);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 12px;
+            border-radius: 12px;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        .register-button:active {
+            transform: scale(0.98);
+        }
+        
+        .social-login-button {
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px;
+            color: white;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .social-login-button:active {
+            transform: scale(0.98);
+        }
+        
+        .demo-button {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #22C55E;
+            border-radius: 12px;
+            padding: 12px;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        .demo-button:active {
+            transform: scale(0.98);
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-bar-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi ml-2"></i>
+        </div>
+        <div class="status-bar-time">9:41</div>
+        <div class="status-bar-battery">
+            <span class="mr-1">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- Background -->
+    <div class="stars"></div>
+    
+    <!-- Content -->
+    <div class="flex flex-col items-center justify-center min-h-[calc(100vh-44px)] p-6">
+        <div class="w-full max-w-sm mb-10">
+            <div class="mb-6">
+                <button class="text-gray-400" onclick="window.location.href='login.html'">
+                    <i class="fas fa-chevron-left mr-2"></i>
+                    返回登录
+                </button>
+            </div>
+            
+            <div class="text-center mb-10">
+                <div class="relative w-24 h-24 mx-auto mb-6 floating">
+                    <div class="absolute inset-0 rounded-full bg-gradient-to-br from-green-400/30 to-blue-500/30 animate-pulse"></div>
+                    <div class="relative flex items-center justify-center w-full h-full">
+                        <i class="fas fa-moon text-4xl text-green-400"></i>
+                    </div>
+                </div>
+                <h1 class="text-3xl font-bold mb-2">创建账号</h1>
+                <p class="text-gray-400">加入SleepPal，开始灵魂共鸣之旅</p>
+            </div>
+            
+            <form id="register-form" class="space-y-4 mb-6">
+                <div>
+                    <input type="text" id="username" placeholder="用户名" class="input-field w-full">
+                </div>
+                <div>
+                    <input type="email" id="email" placeholder="邮箱" class="input-field w-full">
+                </div>
+                <div>
+                    <input type="password" id="password" placeholder="密码" class="input-field w-full">
+                </div>
+                <div>
+                    <input type="password" id="confirm-password" placeholder="确认密码" class="input-field w-full">
+                </div>
+                <div class="flex items-start">
+                    <input type="checkbox" id="terms" class="mt-1 mr-2 h-4 w-4 rounded border-gray-700 text-green-500 focus:ring-green-500">
+                    <label for="terms" class="text-sm text-gray-400">
+                        我已阅读并同意 <a href="#" class="text-green-400">用户协议</a> 和 <a href="#" class="text-green-400">隐私政策</a>
+                    </label>
+                </div>
+                <button type="submit" class="register-button">
+                    注册
+                </button>
+            </form>
+            
+            <div class="relative flex items-center justify-center mb-6">
+                <div class="flex-grow h-px bg-gray-800"></div>
+                <span class="mx-4 text-sm text-gray-500">或者</span>
+                <div class="flex-grow h-px bg-gray-800"></div>
+            </div>
+            
+            <div class="text-center space-y-4">
+                <button id="demo-button" class="demo-button font-medium">
+                    <i class="fas fa-rocket mr-2"></i>
+                    使用演示账号体验
+                </button>
+                
+                <p class="text-sm text-gray-400">
+                    已有账号？ <a href="login.html" class="text-green-400">立即登录</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('register-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const terms = document.getElementById('terms').checked;
+            
+            // Simple validation
+            if (!username || !email || !password || !confirmPassword) {
+                alert('请填写所有字段

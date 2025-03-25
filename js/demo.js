@@ -2,6 +2,7 @@
 (function() {
     // 演示页面序列
     const demoSequence = [
+        'login.html',
         'onboarding-1.html',
         'onboarding-2.html',
         'onboarding-3.html',
@@ -52,6 +53,12 @@
         
         if (!demoModal || !demoFrame) return;
         
+        // Clear any previous login data
+        localStorage.removeItem('sleeppal_logged_in');
+        localStorage.removeItem('sleeppal_user');
+        localStorage.removeItem('sleeppal_onboarded');
+        localStorage.removeItem('sleeppal_demo');
+        
         // 重置到第一页
         currentDemoPage = 0;
         loadDemoPage(currentDemoPage);
@@ -61,8 +68,8 @@
         demoModal.classList.add('flex');
         document.body.style.overflow = 'hidden';
         
-        // 启动自动播放
-        startAutoPlay();
+        // 不自动播放，等用户登录
+        // startAutoPlay();
     }
     
     // 关闭演示

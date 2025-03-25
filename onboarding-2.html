@@ -429,7 +429,14 @@
         }
         
         // Call the function when the page loads
-        window.addEventListener('DOMContentLoaded', generateDNAHelix);
+        window.addEventListener('DOMContentLoaded', function() {
+            generateDNAHelix();
+            
+            // Check login state
+            if(!localStorage.getItem('sleeppal_logged_in')) {
+                window.location.href = 'login.html';
+            }
+        });
         
         // Add navigation functionality if this page is viewed directly (not in iframe)
         if (window.self === window.top) {
@@ -437,6 +444,8 @@
                 window.location.href = 'onboarding-3.html';
             };
             document.querySelector('.skip-button').onclick = function() {
+                // Mark as onboarded
+                localStorage.setItem('sleeppal_onboarded', 'true');
                 window.location.href = 'home.html';
             };
         }

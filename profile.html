@@ -321,7 +321,7 @@
         <!-- Settings -->
         <div class="px-4 mb-6">
             <div class="section-card p-4">
-                <div class="flex justify-between items-center">
+                <div class="flex justify-between items-center" onclick="window.location.href='settings.html'">
                     <div class="flex items-center">
                         <div class="w-10 h-10 rounded-full bg-gray-700/50 flex items-center justify-center mr-3">
                             <i class="fas fa-cog text-white"></i>
@@ -331,6 +331,13 @@
                     <i class="fas fa-chevron-right text-gray-400"></i>
                 </div>
             </div>
+        </div>
+        
+        <!-- Logout Button -->
+        <div class="px-4 mb-6">
+            <button id="logout-button" class="w-full py-3 bg-red-500/20 text-red-400 rounded-xl border border-red-500/30">
+                退出登录
+            </button>
         </div>
     </div>
     
@@ -356,6 +363,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Check login state
+            if(!localStorage.getItem('sleeppal_logged_in')) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Update user name if demo user
+            if(localStorage.getItem('sleeppal_demo')) {
+                document.querySelector('.text-xl.font-bold').innerText = "演示用户";
+                document.querySelector('.text-sm.text-gray-400').innerText = "Demo账号";
+            }
+            
             const tabItems = document.querySelectorAll('.tab-item');
             tabItems.forEach(item => {
                 item.addEventListener('click', function() {
@@ -364,6 +383,15 @@
                         window.location.href = page;
                     }
                 });
+            });
+            
+            // Logout functionality
+            document.getElementById('logout-button').addEventListener('click', function() {
+                localStorage.removeItem('sleeppal_logged_in');
+                localStorage.removeItem('sleeppal_user');
+                localStorage.removeItem('sleeppal_onboarded');
+                localStorage.removeItem('sleeppal_demo');
+                window.location.href = 'login.html';
             });
         });
     </script>
